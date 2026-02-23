@@ -1,7 +1,7 @@
 "use strict";
 
 /**
- * 飲みゲー（40枚）
+ * 飲みゲー（41枚）
  * 目的：その場で即決・盛り上がるカード中心
  */
 
@@ -32,9 +32,12 @@ const CARDS = [
   { title: "キス", category: "当日ネタ", rule: "一番最近キスした人が飲む（言いたくない人は1口で回避OK）。" },
   { title: "ラッパー", category: "チャレンジ", rule: "引いた人が早口言葉を決める。順番に言い、噛んだ人が飲む。" },
   { title: "乾杯", category: "全体", rule: "全員飲む（1口でOK）。" },
-  { title: "究極の選択", category: "選択", rule: "2口飲むか、このメンバーの誰にも言ったことのない秘密を1つ言う。" },
-  { title: "倍々ファイト", category: "罰ゲーム", rule: "引いた人が2口飲む。" },
-  { title: "お残しダメ", category: "量チェック", rule: "今いちばんグラスにお酒が残ってる人が飲み干す（無理なら2口＋水）。" },
+  { title: "究極の選択", category: "選択", rule: "2杯飲むか、このメンバーの誰にも言ったことのない秘密を1つ言う。" },
+  { title: "倍々ファイト", category: "罰ゲーム", rule: "引いた人が2杯飲む。" },
+  { title: "お残しチェック", category: "量チェック", rule: "今いちばんグラスにお酒が残ってる人が飲み干す（無理なら2口＋水）。" },
+
+  // ★追加：ロック画面（今回の要望）
+  { title: "ロック画面", category: "即決", rule: "一番○○なロック画面の人が飲む。（○○は引いた人が決める：人が多く映ってる／幸せそう／盛れてる等）" },
 
   // 電池残量：多い/少ない
   { title: "電池残量（少ない）", category: "即決", rule: "スマホの電池残量が一番少ない人が飲む。" },
@@ -54,10 +57,11 @@ const CARDS = [
 
   // なにした
   { title: "なにした", category: "即決", rule: "直近一週間で○○した人は飲む（○○は引いた人が決める）。" },
-  { title: "二択ジャッジ", category: "即決", rule: "引いた人が二択を出す（例：犬派/猫派）。少数派が飲む。" },
-  { title: "多数決", category: "即決", rule: "引いた人が質問を1つ。少数派が飲む。" },
-  { title: "ワンワード", category: "即決", rule: "引いた人が“お題”を1つ。全員1語で答える。被った人が飲む。" },
-  { title: "3・2・1", category: "即決", rule: "全員でせーので1〜3の数字を指で出す。一番少ない数字の人が飲む（同数なら同数）。" },
+
+  { title: "二択ジャッジ", category: "即決", rule: "引いた人が二択を出す（例：犬派/猫派）。引いた人が回答を考え、他の人は予想。外れた人は飲む。" },
+  { title: "多数決", category: "即決", rule: "引いた人が質問を1つ。少数派が飲む。（例：1か月後に旅行するなら沖縄or北海道）" },
+  { title: "ワンワード", category: "即決", rule: "引いた人が“お題”を1つ。全員漢字1語で答える。被った人が飲む。（例：夏といえば？→海）" },
+  { title: "3・2・1", category: "即決", rule: "全員でせーので1〜3の数字を指で出す。一番少数派の数字の人が飲む（同数なら同数）。" },
 ];
 
 // ---- DOM helpers ----
@@ -85,22 +89,15 @@ function setTotals() {
 }
 
 function setScreen(name) {
-  const deckScr = el("screen-deck");
-  const revScr = el("screen-reveal");
-  const finScr = el("screen-finished");
-
-  if (deckScr) deckScr.classList.remove("screen-active");
-  if (revScr) revScr.classList.remove("screen-active");
-  if (finScr) finScr.classList.remove("screen-active");
-
-  const target = el(name);
-  if (target) target.classList.add("screen-active");
+  const ids = ["screen-deck", "screen-reveal", "screen-finished"];
+  ids.forEach((sid) => el(sid)?.classList.remove("screen-active"));
+  el(name)?.classList.add("screen-active");
 }
 
 function updateCounters() {
-  if (el("remain")) el("remain").textContent = String(deck.length);
-  if (el("remain2")) el("remain2").textContent = String(deck.length);
-  if (el("drawn")) el("drawn").textContent = String(drawnCount);
+  el("remain") && (el("remain").textContent = String(deck.length));
+  el("remain2") && (el("remain2").textContent = String(deck.length));
+  el("drawn") && (el("drawn").textContent = String(drawnCount));
 }
 
 function newGame() {
@@ -112,13 +109,17 @@ function newGame() {
 }
 
 function showCard(card) {
-  if (el("card-index")) el("card-index").textContent = String(drawnCount);
-  if (el("card-title")) el("card-title").textContent = card.title;
-  if (el("card-subtitle")) el("card-subtitle").textContent = card.category;
-  if (el("card-rule")) el("card-rule").textContent = card.rule;
+  el("card-index") && (el("card-index").textContent = String(drawnCount));
+  el("card-title") && (el("card-title").textContent = card.title);
+  el("card-subtitle") && (el("card-subtitle").textContent = card.category);
+  el("card-rule") && (el("card-rule").textContent = card.rule);
 
   updateCounters();
   setScreen("screen-reveal");
+}
+
+function finishIfNeeded() {
+  if (deck.length === 0) setScreen("screen-finished");
 }
 
 function drawCard() {
@@ -135,12 +136,17 @@ function drawCard() {
 function bindEvents() {
   el("btn-draw")?.addEventListener("click", drawCard);
 
+  // 「次のカードへ」= 次を引く（残り0なら終了画面）
   el("btn-next")?.addEventListener("click", () => {
-    if (deck.length === 0) setScreen("screen-finished");
-    else drawCard();
+    if (deck.length === 0) {
+      setScreen("screen-finished");
+      return;
+    }
+    drawCard();
   });
 
-  el("btn-back")?.addEventListener("click", () => setScreen("screen-deck"));
+  // ※戻るボタンはHTMLから消した前提。残ってても安全に無視される
+  // el("btn-back")?.addEventListener("click", () => setScreen("screen-deck"));
 
   el("btn-reset")?.addEventListener("click", () => {
     const ok = confirm("最初からやり直しますか？（カードはシャッフルされます）");

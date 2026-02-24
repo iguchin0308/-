@@ -1,10 +1,16 @@
 "use strict";
 
 /**
- * 飲みゲー（41枚）
+ * 飲みゲー（41枚）＋ネオン線画アイコン埋め込み
  * 目的：その場で即決・盛り上がるカード中心
+ *
+ * 追加仕様：
+ * - 戻るボタンなし（btn-back を使わない）
+ * - reveal 画面でカードごとにアイコン表示（#card-icon があれば表示）
+ * - ない場合でもエラーにならない
  */
 
+// -------------------- Cards --------------------
 const CARDS = [
   // --- ベース ---
   { title: "白熊", category: "服装", rule: "白い服や小物を身に着けている人が飲む。" },
@@ -19,24 +25,28 @@ const CARDS = [
   { title: "共通点探し", category: "即決", rule: "引いた人が“全員の共通点”を1つ即答。10秒で出なければ全員1口。" },
   { title: "指差し", category: "即決", rule: "せーので指差し。一番指さされた人が飲む（同票なら同票の複数人が飲む）。" },
   { title: "独裁", category: "全体", rule: "引いた人以外、全員が飲む。" },
+
   { title: "右隣", category: "席順", rule: "引いた人の右隣が飲む。" },
   { title: "左隣", category: "席順", rule: "引いた人の左隣が飲む。" },
   { title: "向かい", category: "席順", rule: "引いた人の向かい（正面）が飲む。向かいが不明なら“目が合った人”が飲む。" },
   { title: "偶数席", category: "席順", rule: "座席を1番から順に数えて“偶数席”の人が飲む（数え方は引いた人が決める）。" },
   { title: "奇数席", category: "席順", rule: "座席を1番から順に数えて“奇数席”の人が飲む（数え方は引いた人が決める）。" },
+
   { title: "最年長", category: "プロフィール", rule: "この場で一番年上の人が飲む。" },
   { title: "最年少", category: "プロフィール", rule: "この場で一番年下の人が飲む。" },
+
   { title: "メデゥーサ", category: "心理戦", rule: "引いた人と最初に目が合った人が飲む。10秒誰とも目が合わなければ引いた人が飲む。" },
   { title: "遅刻", category: "当日ネタ", rule: "今日の飲み会に一番遅刻した人が飲む。" },
   { title: "人気者", category: "即決", rule: "全員スマホを出す。一番最初にLINE/DMの通知が来た人が飲む（来なければ引いた人が飲む）。" },
   { title: "キス", category: "当日ネタ", rule: "一番最近キスした人が飲む（言いたくない人は1口で回避OK）。" },
   { title: "ラッパー", category: "チャレンジ", rule: "引いた人が早口言葉を決める。順番に言い、噛んだ人が飲む。" },
+
   { title: "乾杯", category: "全体", rule: "全員飲む（1口でOK）。" },
   { title: "究極の選択", category: "選択", rule: "2杯飲むか、このメンバーの誰にも言ったことのない秘密を1つ言う。" },
   { title: "倍々ファイト", category: "罰ゲーム", rule: "引いた人が2杯飲む。" },
   { title: "お残しチェック", category: "量チェック", rule: "今いちばんグラスにお酒が残ってる人が飲み干す（無理なら2口＋水）。" },
 
-  // ★追加：ロック画面（今回の要望）
+  // ★追加：ロック画面
   { title: "ロック画面", category: "即決", rule: "一番○○なロック画面の人が飲む。（○○は引いた人が決める：人が多く映ってる／幸せそう／盛れてる等）" },
 
   // 電池残量：多い/少ない
@@ -64,7 +74,115 @@ const CARDS = [
   { title: "3・2・1", category: "即決", rule: "全員でせーので1〜3の数字を指で出す。一番少数派の数字の人が飲む（同数なら同数）。" },
 ];
 
-// ---- DOM helpers ----
+// -------------------- Neon SVG Icons --------------------
+// ※ここは「title」と完全一致させるとそのアイコンが出る
+// ※無いカードは default が出る
+const ICONS = {
+  "白熊": `
+  <svg viewBox="0 0 100 100" aria-hidden="true">
+    <circle cx="35" cy="28" r="9"></circle>
+    <circle cx="65" cy="28" r="9"></circle>
+    <circle cx="50" cy="52" r="26"></circle>
+    <circle cx="42" cy="48" r="4"></circle>
+    <circle cx="58" cy="48" r="4"></circle>
+    <path d="M47 57 Q50 60 53 57" fill="none"></path>
+  </svg>`,
+
+  "誕生日ボーイ&ガール": `
+  <svg viewBox="0 0 100 100" aria-hidden="true">
+    <path d="M30 45 H70 V75 H30 Z" fill="none"></path>
+    <path d="M30 55 H70" fill="none"></path>
+    <path d="M50 25 V45" fill="none"></path>
+    <path d="M45 30 Q50 22 55 30" fill="none"></path>
+  </svg>`,
+
+  "水チェイサー": `
+  <svg viewBox="0 0 100 100" aria-hidden="true">
+    <path d="M35 25 H65 L62 78 H38 Z" fill="none"></path>
+    <path d="M40 55 Q50 62 60 55" fill="none"></path>
+  </svg>`,
+
+  "じゃんけん王": `
+  <svg viewBox="0 0 100 100" aria-hidden="true">
+    <path d="M35 55 Q40 35 50 35 Q60 35 65 55" fill="none"></path>
+    <path d="M35 55 H65" fill="none"></path>
+    <path d="M40 35 V25" fill="none"></path>
+    <path d="M50 35 V22" fill="none"></path>
+    <path d="M60 35 V25" fill="none"></path>
+  </svg>`,
+
+  "指差し": `
+  <svg viewBox="0 0 100 100" aria-hidden="true">
+    <path d="M40 70 V40 Q40 30 50 30 Q60 30 60 40 V58" fill="none"></path>
+    <path d="M45 32 V22" fill="none"></path>
+    <path d="M52 30 V20" fill="none"></path>
+    <path d="M58 32 V22" fill="none"></path>
+  </svg>`,
+
+  "独裁": `
+  <svg viewBox="0 0 100 100" aria-hidden="true">
+    <circle cx="50" cy="38" r="10"></circle>
+    <path d="M30 78 Q50 60 70 78" fill="none"></path>
+    <path d="M50 48 V62" fill="none"></path>
+  </svg>`,
+
+  "メデゥーサ": `
+  <svg viewBox="0 0 100 100" aria-hidden="true">
+    <ellipse cx="50" cy="52" rx="28" ry="18" fill="none"></ellipse>
+    <circle cx="40" cy="52" r="3"></circle>
+    <circle cx="60" cy="52" r="3"></circle>
+    <path d="M50 60 Q50 63 50 66" fill="none"></path>
+  </svg>`,
+
+  "乾杯": `
+  <svg viewBox="0 0 100 100" aria-hidden="true">
+    <path d="M30 30 L45 58 H38 L23 30 Z" fill="none"></path>
+    <path d="M70 30 L55 58 H62 L77 30 Z" fill="none"></path>
+    <path d="M45 58 Q50 70 55 58" fill="none"></path>
+  </svg>`,
+
+  "バリア": `
+  <svg viewBox="0 0 100 100" aria-hidden="true">
+    <path d="M50 18 L72 30 V55 Q50 80 28 55 V30 Z" fill="none"></path>
+    <path d="M50 18 V80" fill="none"></path>
+  </svg>`,
+
+  "ガードマン": `
+  <svg viewBox="0 0 100 100" aria-hidden="true">
+    <circle cx="50" cy="35" r="10" fill="none"></circle>
+    <path d="M35 78 V55 Q50 48 65 55 V78" fill="none"></path>
+  </svg>`,
+
+  "ロック画面": `
+  <svg viewBox="0 0 100 100" aria-hidden="true">
+    <rect x="32" y="22" width="36" height="56" rx="6" fill="none"></rect>
+    <circle cx="50" cy="70" r="2.5"></circle>
+    <path d="M45 35 H55" fill="none"></path>
+  </svg>`,
+
+  "電池残量（少ない）": `
+  <svg viewBox="0 0 100 100" aria-hidden="true">
+    <rect x="24" y="40" width="52" height="20" rx="3" fill="none"></rect>
+    <rect x="76" y="45" width="6" height="10" fill="none"></rect>
+    <rect x="28" y="44" width="10" height="12" fill="none"></rect>
+  </svg>`,
+
+  "電池残量（多い）": `
+  <svg viewBox="0 0 100 100" aria-hidden="true">
+    <rect x="24" y="40" width="52" height="20" rx="3" fill="none"></rect>
+    <rect x="76" y="45" width="6" height="10" fill="none"></rect>
+    <rect x="28" y="44" width="40" height="12" fill="none"></rect>
+  </svg>`,
+
+  "default": `
+  <svg viewBox="0 0 100 100" aria-hidden="true">
+    <circle cx="50" cy="50" r="24" fill="none"></circle>
+    <path d="M50 28 V72" fill="none"></path>
+    <path d="M28 50 H72" fill="none"></path>
+  </svg>`
+};
+
+// -------------------- DOM helpers --------------------
 const el = (id) => document.getElementById(id);
 
 function shuffle(array) {
@@ -75,14 +193,14 @@ function shuffle(array) {
   return array;
 }
 
-// ---- State ----
+// -------------------- State --------------------
 let deck = [];
 let drawnCount = 0;
 
-// ---- UI ----
+// -------------------- UI --------------------
 function setTotals() {
   const total = String(CARDS.length);
-  ["total","total2","total3","total4","total5"].forEach((id) => {
+  ["total", "total2", "total3", "total4", "total5"].forEach((id) => {
     const node = el(id);
     if (node) node.textContent = total;
   });
@@ -100,6 +218,25 @@ function updateCounters() {
   el("drawn") && (el("drawn").textContent = String(drawnCount));
 }
 
+function renderIconForCard(card) {
+  const box = el("card-icon");
+  if (!box) return; // HTMLに置いてなければ何もしない（落とさない）
+
+  const svg = ICONS[card.title] || ICONS["default"];
+  box.innerHTML = svg;
+
+  // ネオン線画っぽく統一（CSSが無くても最低限見えるように）
+  const s = box.querySelector("svg");
+  if (s) {
+    s.setAttribute("width", "100%");
+    s.setAttribute("height", "100%");
+    s.style.maxWidth = "120px";
+    s.style.maxHeight = "120px";
+    s.style.display = "block";
+    s.style.margin = "6px 0 10px";
+  }
+}
+
 function newGame() {
   deck = shuffle(CARDS.map((c) => ({ ...c })));
   drawnCount = 0;
@@ -114,12 +251,9 @@ function showCard(card) {
   el("card-subtitle") && (el("card-subtitle").textContent = card.category);
   el("card-rule") && (el("card-rule").textContent = card.rule);
 
+  renderIconForCard(card);
   updateCounters();
   setScreen("screen-reveal");
-}
-
-function finishIfNeeded() {
-  if (deck.length === 0) setScreen("screen-finished");
 }
 
 function drawCard() {
@@ -132,7 +266,7 @@ function drawCard() {
   showCard(card);
 }
 
-// ---- Events ----
+// -------------------- Events --------------------
 function bindEvents() {
   el("btn-draw")?.addEventListener("click", drawCard);
 
@@ -145,8 +279,7 @@ function bindEvents() {
     drawCard();
   });
 
-  // ※戻るボタンはHTMLから消した前提。残ってても安全に無視される
-  // el("btn-back")?.addEventListener("click", () => setScreen("screen-deck"));
+  // 戻るボタンは使わない（HTMLから削除済み前提）
 
   el("btn-reset")?.addEventListener("click", () => {
     const ok = confirm("最初からやり直しますか？（カードはシャッフルされます）");
@@ -157,9 +290,9 @@ function bindEvents() {
   el("btn-finish-back")?.addEventListener("click", () => setScreen("screen-deck"));
 }
 
-// ---- Boot ----
-(function boot(){
-  try{
+// -------------------- Boot --------------------
+(function boot() {
+  try {
     console.log(`飲みゲー：カード枚数 = ${CARDS.length}枚`);
     bindEvents();
     newGame();

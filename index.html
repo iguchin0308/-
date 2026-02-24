@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>飲みゲー</title>
+  <title>つぶれてもいいですか？｜飲みゲー</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -19,7 +19,7 @@
     </header>
 
     <!-- Screen: Deck -->
-    <main id="screen-deck" class="screen screen-active" role="main" aria-label="カードを引く画面">
+    <main id="screen-deck" class="screen screen-active" role="region" aria-label="カードを引く画面">
       <section class="card card-deck">
         <div class="deck-info">
           <div class="pill">
@@ -52,7 +52,7 @@
     </main>
 
     <!-- Screen: Reveal -->
-    <main id="screen-reveal" class="screen" role="main" aria-label="カード表示画面">
+    <main id="screen-reveal" class="screen" role="region" aria-label="カード表示画面">
       <section class="card card-reveal">
         <div class="badge">
           <span id="card-index">1</span> / <span id="total3">--</span>
@@ -83,7 +83,7 @@
     </main>
 
     <!-- Screen: Finished -->
-    <main id="screen-finished" class="screen" role="main" aria-label="終了画面">
+    <main id="screen-finished" class="screen" role="region" aria-label="終了画面">
       <section class="card card-finished">
         <h2>終了！</h2>
         <p class="big"><span id="total4">--</span>枚、引き切りました 🍻</p>
@@ -101,6 +101,6 @@
   </div>
 
   <!-- ★ここ重要：キャッシュ破り（更新するたびに数字変える） -->
-  <script src="./script.js?v=101"></script>
+  <script src="./script.js?v=102"></script>
 </body>
 </html>

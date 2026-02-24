@@ -397,3 +397,29 @@ body::after{
 .screen[aria-hidden="true"]{
   pointer-events: none;
 }
+/* --- Neon Icon System --- */
+.card-icon{
+  width: 120px;
+  height: 120px;
+  margin: 10px auto 6px;
+  display: grid;
+  place-items: center;
+  filter:
+    drop-shadow(0 0 16px rgba(34,230,255,.25))
+    drop-shadow(0 0 30px rgba(255,79,216,.18));
+}
+
+.card-icon svg{ width: 100%; height: 100%; display:block; }
+
+.card-icon svg *{
+  vector-effect: non-scaling-stroke;
+  stroke: rgba(34,230,255,.95);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+}
+
+/* アクセントを混ぜたいとき用（任意） */
+.card-icon .pink { stroke: rgba(255,79,216,.95); }
+.card-icon .yellow { stroke: rgba(255,213,74,.95); }

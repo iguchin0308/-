@@ -1,0 +1,272 @@
+const ICONS = {
+  "白熊": `
+  <svg viewBox="0 0 100 100" aria-hidden="true">
+    <!-- ears -->
+    <circle cx="34" cy="28" r="8"></circle>
+    <circle cx="66" cy="28" r="8"></circle>
+    <!-- head -->
+    <circle cx="50" cy="52" r="26"></circle>
+    <!-- eyes -->
+    <circle cx="41.5" cy="50" r="3"></circle>
+    <circle cx="58.5" cy="50" r="3"></circle>
+    <!-- nose -->
+    <path d="M48 56 Q50 58 52 56"></path>
+    <path d="M46 60 Q50 64 54 60"></path>
+  </svg>`,
+
+  "ずっとも": `
+  <svg viewBox="0 0 100 100" aria-hidden="true">
+    <!-- two seats + link -->
+    <rect x="18" y="38" width="22" height="26" rx="6"></rect>
+    <rect x="60" y="38" width="22" height="26" rx="6"></rect>
+    <path d="M40 51 H60"></path>
+    <path d="M34 34 Q29 28 24 34"></path>
+    <path d="M76 34 Q71 28 66 34"></path>
+  </svg>`,
+
+  "誕生日ボーイ&ガール": `
+  <svg viewBox="0 0 100 100" aria-hidden="true">
+    <!-- cake -->
+    <rect x="28" y="48" width="44" height="26" rx="6"></rect>
+    <path d="M28 58 H72"></path>
+    <!-- candle -->
+    <path d="M50 30 V48"></path>
+    <path d="M46 34 Q50 24 54 34"></path>
+    <!-- sprinkles -->
+    <path d="M36 54 L40 54"></path>
+    <path d="M60 66 L64 66"></path>
+  </svg>`,
+
+  "水チェイサー": `
+  <svg viewBox="0 0 100 100" aria-hidden="true">
+    <!-- glass -->
+    <path d="M34 24 H66"></path>
+    <path d="M36 24 L40 78 H60 L64 24"></path>
+    <!-- water wave -->
+    <path d="M40 54 Q50 60 60 54"></path>
+    <path d="M42 62 Q50 67 58 62"></path>
+  </svg>`,
+
+  "じゃんけん王": `
+  <svg viewBox="0 0 100 100" aria-hidden="true">
+    <!-- crown -->
+    <path d="M30 46 L38 34 L50 46 L62 34 L70 46"></path>
+    <path d="M30 46 H70"></path>
+    <!-- fist -->
+    <rect x="34" y="50" width="32" height="26" rx="10"></rect>
+    <path d="M42 50 V40"></path>
+    <path d="M50 50 V38"></path>
+    <path d="M58 50 V40"></path>
+  </svg>`,
+
+  "共通点探し": `
+  <svg viewBox="0 0 100 100" aria-hidden="true">
+    <!-- Venn -->
+    <circle cx="44" cy="52" r="18"></circle>
+    <circle cx="56" cy="52" r="18"></circle>
+    <!-- sparkle -->
+    <path d="M50 22 V30"></path>
+    <path d="M46 26 H54"></path>
+  </svg>`,
+
+  "指差し": `
+  <svg viewBox="0 0 100 100" aria-hidden="true">
+    <!-- finger -->
+    <path d="M40 76 V44 Q40 34 50 34 Q60 34 60 44 V66"></path>
+    <path d="M45 36 V22"></path>
+    <path d="M52 34 V20"></path>
+    <path d="M58 36 V22"></path>
+    <!-- target -->
+    <circle cx="76" cy="68" r="10"></circle>
+    <circle cx="76" cy="68" r="4"></circle>
+  </svg>`,
+
+  "独裁": `
+  <svg viewBox="0 0 100 100" aria-hidden="true">
+    <!-- spotlight -->
+    <path d="M22 26 L46 18"></path>
+    <path d="M22 26 L46 34"></path>
+    <!-- person -->
+    <circle cx="56" cy="36" r="9"></circle>
+    <path d="M44 78 Q56 60 68 78"></path>
+    <path d="M56 45 V62"></path>
+  </svg>`,
+
+  "右隣": `
+  <svg viewBox="0 0 100 100" aria-hidden="true">
+    <!-- arrow right -->
+    <path d="M30 50 H64"></path>
+    <path d="M58 42 L70 50 L58 58"></path>
+    <!-- seat -->
+    <rect x="22" y="60" width="18" height="16" rx="5"></rect>
+  </svg>`,
+
+  "左隣": `
+  <svg viewBox="0 0 100 100" aria-hidden="true">
+    <!-- arrow left -->
+    <path d="M70 50 H36"></path>
+    <path d="M42 42 L30 50 L42 58"></path>
+    <!-- seat -->
+    <rect x="60" y="60" width="18" height="16" rx="5"></rect>
+  </svg>`,
+
+  "向かい": `
+  <svg viewBox="0 0 100 100" aria-hidden="true">
+    <!-- two people facing -->
+    <circle cx="34" cy="44" r="8"></circle>
+    <circle cx="66" cy="44" r="8"></circle>
+    <path d="M26 74 Q34 62 42 74"></path>
+    <path d="M58 74 Q66 62 74 74"></path>
+    <!-- eye contact -->
+    <path d="M42 44 H58"></path>
+  </svg>`,
+
+  "最年長": `
+  <svg viewBox="0 0 100 100" aria-hidden="true">
+    <!-- crown older -->
+    <path d="M34 30 L42 18 L50 30 L58 18 L66 30"></path>
+    <path d="M34 30 H66"></path>
+    <!-- person -->
+    <circle cx="50" cy="50" r="10"></circle>
+    <path d="M34 80 Q50 62 66 80"></path>
+  </svg>`,
+
+  "最年少": `
+  <svg viewBox="0 0 100 100" aria-hidden="true">
+    <!-- baby face -->
+    <circle cx="50" cy="48" r="20"></circle>
+    <circle cx="42" cy="46" r="3"></circle>
+    <circle cx="58" cy="46" r="3"></circle>
+    <path d="M44 56 Q50 62 56 56"></path>
+    <!-- pacifier -->
+    <circle cx="50" cy="66" r="6"></circle>
+    <path d="M44 66 H56"></path>
+  </svg>`,
+
+  "メデゥーサ": `
+  <svg viewBox="0 0 100 100" aria-hidden="true">
+    <!-- eye -->
+    <ellipse cx="50" cy="52" rx="28" ry="18"></ellipse>
+    <circle cx="50" cy="52" r="6"></circle>
+    <!-- snakes -->
+    <path d="M30 34 Q22 26 28 18"></path>
+    <path d="M42 28 Q38 18 46 14"></path>
+    <path d="M58 28 Q62 18 54 14"></path>
+    <path d="M70 34 Q78 26 72 18"></path>
+  </svg>`,
+
+  "人気者": `
+  <svg viewBox="0 0 100 100" aria-hidden="true">
+    <!-- phone -->
+    <rect x="34" y="18" width="32" height="64" rx="6"></rect>
+    <circle cx="50" cy="72" r="2.5"></circle>
+    <!-- notification -->
+    <circle cx="68" cy="28" r="10" class="pink"></circle>
+    <path d="M68 22 V34" class="pink"></path>
+    <path d="M62 28 H74" class="pink"></path>
+  </svg>`,
+
+  "ラッパー": `
+  <svg viewBox="0 0 100 100" aria-hidden="true">
+    <!-- mic -->
+    <path d="M52 24 Q64 24 64 36 Q64 48 52 48 Q40 48 40 36 Q40 24 52 24"></path>
+    <path d="M52 48 V64"></path>
+    <path d="M44 64 H60"></path>
+    <path d="M46 70 H58"></path>
+    <!-- sound -->
+    <path d="M72 36 Q80 42 72 48"></path>
+    <path d="M78 32 Q90 42 78 52"></path>
+  </svg>`,
+
+  "乾杯": `
+  <svg viewBox="0 0 100 100" aria-hidden="true">
+    <!-- clink glasses -->
+    <path d="M28 26 L44 54 H36 L20 26 Z"></path>
+    <path d="M72 26 L56 54 H64 L80 26 Z"></path>
+    <path d="M44 54 Q50 70 56 54"></path>
+    <!-- spark -->
+    <path d="M50 18 V26" class="yellow"></path>
+    <path d="M46 22 H54" class="yellow"></path>
+  </svg>`,
+
+  "究極の選択": `
+  <svg viewBox="0 0 100 100" aria-hidden="true">
+    <!-- split -->
+    <path d="M50 22 V78"></path>
+    <!-- cup -->
+    <path d="M18 34 H38 L36 76 H20 Z"></path>
+    <!-- secret -->
+    <path d="M62 50 Q62 40 72 40 Q82 40 82 50 Q82 58 72 64 Q62 58 62 50"></path>
+    <path d="M72 64 V76"></path>
+  </svg>`,
+
+  "お残しチェック": `
+  <svg viewBox="0 0 100 100" aria-hidden="true">
+    <!-- glass -->
+    <path d="M32 22 H68"></path>
+    <path d="M34 22 L38 78 H62 L66 22"></path>
+    <!-- level -->
+    <path d="M40 60 H60" class="pink"></path>
+    <path d="M44 64 Q50 68 56 64" class="pink"></path>
+  </svg>`,
+
+  "ロック画面": `
+  <svg viewBox="0 0 100 100" aria-hidden="true">
+    <rect x="30" y="18" width="40" height="64" rx="7"></rect>
+    <circle cx="50" cy="72" r="2.5"></circle>
+    <!-- lock -->
+    <rect x="42" y="38" width="16" height="14" rx="3"></rect>
+    <path d="M45 38 V34 Q50 28 55 34 V38"></path>
+  </svg>`,
+
+  "電池残量（少ない）": `
+  <svg viewBox="0 0 100 100" aria-hidden="true">
+    <rect x="22" y="40" width="54" height="20" rx="4"></rect>
+    <rect x="76" y="45" width="6" height="10" rx="2"></rect>
+    <rect x="26" y="44" width="10" height="12" rx="2" class="pink"></rect>
+    <path d="M50 30 V36" class="pink"></path>
+    <path d="M47 33 H53" class="pink"></path>
+  </svg>`,
+
+  "電池残量（多い）": `
+  <svg viewBox="0 0 100 100" aria-hidden="true">
+    <rect x="22" y="40" width="54" height="20" rx="4"></rect>
+    <rect x="76" y="45" width="6" height="10" rx="2"></rect>
+    <rect x="26" y="44" width="44" height="12" rx="2" class="yellow"></rect>
+    <path d="M50 30 V36" class="yellow"></path>
+    <path d="M47 33 H53" class="yellow"></path>
+  </svg>`,
+
+  "バリア": `
+  <svg viewBox="0 0 100 100" aria-hidden="true">
+    <!-- shield -->
+    <path d="M50 16 L74 28 V54 Q50 82 26 54 V28 Z"></path>
+    <!-- glow line -->
+    <path d="M50 18 V80" class="pink"></path>
+  </svg>`,
+
+  "ガードマン": `
+  <svg viewBox="0 0 100 100" aria-hidden="true">
+    <!-- person -->
+    <circle cx="50" cy="34" r="10"></circle>
+    <path d="M34 78 V56 Q50 46 66 56 V78"></path>
+    <!-- shield -->
+    <path d="M72 44 L86 52 V64 Q79 76 72 80 Q65 76 58 64 V52 Z"></path>
+  </svg>`,
+
+  "セーフティ": `
+  <svg viewBox="0 0 100 100" aria-hidden="true">
+    <!-- check badge -->
+    <circle cx="50" cy="50" r="26"></circle>
+    <path d="M38 52 L46 60 L64 42" class="yellow"></path>
+  </svg>`,
+
+  "default": `
+  <svg viewBox="0 0 100 100" aria-hidden="true">
+    <!-- card outline -->
+    <rect x="26" y="18" width="48" height="64" rx="10"></rect>
+    <path d="M34 36 H66"></path>
+    <path d="M34 50 H58"></path>
+    <path d="M34 64 H54"></path>
+  </svg>`
+};

@@ -6,8 +6,14 @@
  *
  * 仕様：
  * - 戻るボタンなし（btn-back を使わない）
- * - reveal 画面でカードごとにアイコン表示（#card-icon があれば表示）
+ * - reveal 画面でカードごとにPNGアイコン表示（#card-icon）
  * - ない場合でもエラーにならない
+ * - PNGが404なら default にフォールバック
+ *
+ * ✅ 前提：
+ * - index.html に #card-icon がある（あなたのHTMLはOK）
+ * - PNGを ./icons/ フォルダに置く（例：./icons/bear.png）
+ *   ※フォルダ名/ファイル名はあなたの実物に合わせて変更してOK
  */
 
 // -------------------- Cards --------------------
@@ -74,97 +80,50 @@ const CARDS = [
   { title: "3・2・1", category: "即決", rule: "全員でせーので1〜3の数字を指で出す。一番少数派の数字の人が飲む（同数なら同数）。" },
 ];
 
-// -------------------- Icons (placeholder; last to polish) --------------------
+// -------------------- Icons (PNG) --------------------
+// ✅ あなたのPNGファイル名に合わせてここを編集するだけでOK。
+// 例：/icons にPNGを置いた想定（index.html と同階層に icons フォルダ）
 const ICONS = {
-  "白熊": `
-  <svg viewBox="0 0 100 100" aria-hidden="true">
-    <circle cx="35" cy="28" r="9"></circle>
-    <circle cx="65" cy="28" r="9"></circle>
-    <circle cx="50" cy="52" r="26"></circle>
-    <circle cx="42" cy="48" r="4"></circle>
-    <circle cx="58" cy="48" r="4"></circle>
-    <path d="M47 57 Q50 60 53 57" fill="none"></path>
-  </svg>`,
-  "誕生日ボーイ&ガール": `
-  <svg viewBox="0 0 100 100" aria-hidden="true">
-    <path d="M30 45 H70 V75 H30 Z" fill="none"></path>
-    <path d="M30 55 H70" fill="none"></path>
-    <path d="M50 25 V45" fill="none"></path>
-    <path d="M45 30 Q50 22 55 30" fill="none"></path>
-  </svg>`,
-  "水チェイサー": `
-  <svg viewBox="0 0 100 100" aria-hidden="true">
-    <path d="M35 25 H65 L62 78 H38 Z" fill="none"></path>
-    <path d="M40 55 Q50 62 60 55" fill="none"></path>
-  </svg>`,
-  "じゃんけん王": `
-  <svg viewBox="0 0 100 100" aria-hidden="true">
-    <path d="M35 55 Q40 35 50 35 Q60 35 65 55" fill="none"></path>
-    <path d="M35 55 H65" fill="none"></path>
-    <path d="M40 35 V25" fill="none"></path>
-    <path d="M50 35 V22" fill="none"></path>
-    <path d="M60 35 V25" fill="none"></path>
-  </svg>`,
-  "指差し": `
-  <svg viewBox="0 0 100 100" aria-hidden="true">
-    <path d="M40 70 V40 Q40 30 50 30 Q60 30 60 40 V58" fill="none"></path>
-    <path d="M45 32 V22" fill="none"></path>
-    <path d="M52 30 V20" fill="none"></path>
-    <path d="M58 32 V22" fill="none"></path>
-  </svg>`,
-  "独裁": `
-  <svg viewBox="0 0 100 100" aria-hidden="true">
-    <circle cx="50" cy="38" r="10"></circle>
-    <path d="M30 78 Q50 60 70 78" fill="none"></path>
-    <path d="M50 48 V62" fill="none"></path>
-  </svg>`,
-  "メデゥーサ": `
-  <svg viewBox="0 0 100 100" aria-hidden="true">
-    <ellipse cx="50" cy="52" rx="28" ry="18" fill="none"></ellipse>
-    <circle cx="40" cy="52" r="3"></circle>
-    <circle cx="60" cy="52" r="3"></circle>
-    <path d="M50 60 Q50 63 50 66" fill="none"></path>
-  </svg>`,
-  "乾杯": `
-  <svg viewBox="0 0 100 100" aria-hidden="true">
-    <path d="M30 30 L45 58 H38 L23 30 Z" fill="none"></path>
-    <path d="M70 30 L55 58 H62 L77 30 Z" fill="none"></path>
-    <path d="M45 58 Q50 70 55 58" fill="none"></path>
-  </svg>`,
-  "バリア": `
-  <svg viewBox="0 0 100 100" aria-hidden="true">
-    <path d="M50 18 L72 30 V55 Q50 80 28 55 V30 Z" fill="none"></path>
-    <path d="M50 18 V80" fill="none"></path>
-  </svg>`,
-  "ガードマン": `
-  <svg viewBox="0 0 100 100" aria-hidden="true">
-    <circle cx="50" cy="35" r="10" fill="none"></circle>
-    <path d="M35 78 V55 Q50 48 65 55 V78" fill="none"></path>
-  </svg>`,
-  "ロック画面": `
-  <svg viewBox="0 0 100 100" aria-hidden="true">
-    <rect x="32" y="22" width="36" height="56" rx="6" fill="none"></rect>
-    <circle cx="50" cy="70" r="2.5"></circle>
-    <path d="M45 35 H55" fill="none"></path>
-  </svg>`,
-  "電池残量（少ない）": `
-  <svg viewBox="0 0 100 100" aria-hidden="true">
-    <rect x="24" y="40" width="52" height="20" rx="3" fill="none"></rect>
-    <rect x="76" y="45" width="6" height="10" fill="none"></rect>
-    <rect x="28" y="44" width="10" height="12" fill="none"></rect>
-  </svg>`,
-  "電池残量（多い）": `
-  <svg viewBox="0 0 100 100" aria-hidden="true">
-    <rect x="24" y="40" width="52" height="20" rx="3" fill="none"></rect>
-    <rect x="76" y="45" width="6" height="10" fill="none"></rect>
-    <rect x="28" y="44" width="40" height="12" fill="none"></rect>
-  </svg>`,
-  default: `
-  <svg viewBox="0 0 100 100" aria-hidden="true">
-    <circle cx="50" cy="50" r="24" fill="none"></circle>
-    <path d="M50 28 V72" fill="none"></path>
-    <path d="M28 50 H72" fill="none"></path>
-  </svg>`
+  // 画像セットに合わせた “自己判断” 紐付け（好みで調整してOK）
+  "白熊": "./icons/bear.png",
+  "ずっとも": "./icons/seat_heart.png",
+  "誕生日ボーイ&ガール": "./icons/cake.png",
+  "水チェイサー": "./icons/water.png",
+  "じゃんけん王": "./icons/crown_hand.png",
+  "共通点探し": "./icons/venn.png",
+  "指差し": "./icons/point.png",
+  "独裁": "./icons/spotlight.png",
+  "右隣": "./icons/arrow_right.png",
+  "左隣": "./icons/arrow_left.png",
+  "向かい": "./icons/facing.png",
+  "偶数席": "./icons/arrow_right.png",
+  "奇数席": "./icons/arrow_left.png",
+  "最年長": "./icons/crown.png",
+  "最年少": "./icons/baby.png",
+  "メデゥーサ": "./icons/medusa_eye.png",
+  "遅刻": "./icons/spotlight.png",
+  "人気者": "./icons/phone_heart.png",
+  "キス": "./icons/seat_heart.png",
+  "ラッパー": "./icons/mic.png",
+  "乾杯": "./icons/clink.png",
+  "究極の選択": "./icons/choice.png",
+  "倍々ファイト": "./icons/crown_hand.png",
+  "お残しチェック": "./icons/glass_level.png",
+  "ロック画面": "./icons/lockscreen.png",
+  "電池残量（少ない）": "./icons/battery_low.png",
+  "電池残量（多い）": "./icons/battery_full.png",
+  "一斉に乾杯": "./icons/clink.png",
+  "連想ゲーム": "./icons/venn.png",
+  "セーフティ": "./icons/check.png",
+  "バリア": "./icons/shield.png",
+  "ガードマン": "./icons/guard.png",
+  "なにした": "./icons/point.png",
+  "二択ジャッジ": "./icons/choice.png",
+  "多数決": "./icons/venn.png",
+  "ワンワード": "./icons/phone_heart.png",
+  "3・2・1": "./icons/point.png",
+
+  default: "./icons/target.png",
 };
 
 // -------------------- DOM --------------------
@@ -234,23 +193,44 @@ function updateCounters() {
   if (d) d.textContent = drawn;
 }
 
+/**
+ * PNGアイコン描画
+ * - 404のときは default にフォールバック
+ * - 画像がなくても落ちない
+ */
 function renderIconForCard(card) {
   const box = el("card-icon");
   if (!box) return;
 
-  const svg = ICONS[card.title] || ICONS.default || "";
-  box.innerHTML = svg;
+  const src = ICONS[card.title] || ICONS.default || "";
 
-  const s = box.querySelector("svg");
-  if (!s) return;
+  // 毎回クリア
+  box.textContent = "";
 
-  // CSSがまだ整ってなくても最低限破綻しない表示
-  s.setAttribute("width", "100%");
-  s.setAttribute("height", "100%");
-  s.style.display = "block";
-  s.style.maxWidth = "120px";
-  s.style.maxHeight = "120px";
-  s.style.margin = "6px auto 10px";
+  if (!src) return;
+
+  const img = document.createElement("img");
+  img.src = src;
+  img.alt = "";
+  img.decoding = "async";
+  img.loading = "eager";
+
+  // 404などのときは default に差し替え
+  img.onerror = () => {
+    if (img.src.endsWith(ICONS.default)) return;
+    img.src = ICONS.default;
+  };
+
+  // CSS任せでも破綻しない最低限
+  img.style.width = "100%";
+  img.style.height = "100%";
+  img.style.display = "block";
+  img.style.objectFit = "contain";
+  img.style.maxWidth = "120px";
+  img.style.maxHeight = "120px";
+  img.style.margin = "6px auto 10px";
+
+  box.appendChild(img);
 }
 
 function newGame() {

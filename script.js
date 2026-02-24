@@ -1,10 +1,10 @@
 "use strict";
 
 /**
- * 飲みゲー（41枚）＋ネオン線画アイコン埋め込み
+ * 飲みゲー（カード枚数はCARDS.lengthで自動）
  * 目的：その場で即決・盛り上がるカード中心
  *
- * 追加仕様：
+ * 仕様：
  * - 戻るボタンなし（btn-back を使わない）
  * - reveal 画面でカードごとにアイコン表示（#card-icon があれば表示）
  * - ない場合でもエラーにならない
@@ -74,9 +74,7 @@ const CARDS = [
   { title: "3・2・1", category: "即決", rule: "全員でせーので1〜3の数字を指で出す。一番少数派の数字の人が飲む（同数なら同数）。" },
 ];
 
-// -------------------- Neon SVG Icons --------------------
-// ※ここは「title」と完全一致させるとそのアイコンが出る
-// ※無いカードは default が出る
+// -------------------- Icons (placeholder; last to polish) --------------------
 const ICONS = {
   "白熊": `
   <svg viewBox="0 0 100 100" aria-hidden="true">
@@ -87,7 +85,6 @@ const ICONS = {
     <circle cx="58" cy="48" r="4"></circle>
     <path d="M47 57 Q50 60 53 57" fill="none"></path>
   </svg>`,
-
   "誕生日ボーイ&ガール": `
   <svg viewBox="0 0 100 100" aria-hidden="true">
     <path d="M30 45 H70 V75 H30 Z" fill="none"></path>
@@ -95,13 +92,11 @@ const ICONS = {
     <path d="M50 25 V45" fill="none"></path>
     <path d="M45 30 Q50 22 55 30" fill="none"></path>
   </svg>`,
-
   "水チェイサー": `
   <svg viewBox="0 0 100 100" aria-hidden="true">
     <path d="M35 25 H65 L62 78 H38 Z" fill="none"></path>
     <path d="M40 55 Q50 62 60 55" fill="none"></path>
   </svg>`,
-
   "じゃんけん王": `
   <svg viewBox="0 0 100 100" aria-hidden="true">
     <path d="M35 55 Q40 35 50 35 Q60 35 65 55" fill="none"></path>
@@ -110,7 +105,6 @@ const ICONS = {
     <path d="M50 35 V22" fill="none"></path>
     <path d="M60 35 V25" fill="none"></path>
   </svg>`,
-
   "指差し": `
   <svg viewBox="0 0 100 100" aria-hidden="true">
     <path d="M40 70 V40 Q40 30 50 30 Q60 30 60 40 V58" fill="none"></path>
@@ -118,14 +112,12 @@ const ICONS = {
     <path d="M52 30 V20" fill="none"></path>
     <path d="M58 32 V22" fill="none"></path>
   </svg>`,
-
   "独裁": `
   <svg viewBox="0 0 100 100" aria-hidden="true">
     <circle cx="50" cy="38" r="10"></circle>
     <path d="M30 78 Q50 60 70 78" fill="none"></path>
     <path d="M50 48 V62" fill="none"></path>
   </svg>`,
-
   "メデゥーサ": `
   <svg viewBox="0 0 100 100" aria-hidden="true">
     <ellipse cx="50" cy="52" rx="28" ry="18" fill="none"></ellipse>
@@ -133,48 +125,41 @@ const ICONS = {
     <circle cx="60" cy="52" r="3"></circle>
     <path d="M50 60 Q50 63 50 66" fill="none"></path>
   </svg>`,
-
   "乾杯": `
   <svg viewBox="0 0 100 100" aria-hidden="true">
     <path d="M30 30 L45 58 H38 L23 30 Z" fill="none"></path>
     <path d="M70 30 L55 58 H62 L77 30 Z" fill="none"></path>
     <path d="M45 58 Q50 70 55 58" fill="none"></path>
   </svg>`,
-
   "バリア": `
   <svg viewBox="0 0 100 100" aria-hidden="true">
     <path d="M50 18 L72 30 V55 Q50 80 28 55 V30 Z" fill="none"></path>
     <path d="M50 18 V80" fill="none"></path>
   </svg>`,
-
   "ガードマン": `
   <svg viewBox="0 0 100 100" aria-hidden="true">
     <circle cx="50" cy="35" r="10" fill="none"></circle>
     <path d="M35 78 V55 Q50 48 65 55 V78" fill="none"></path>
   </svg>`,
-
   "ロック画面": `
   <svg viewBox="0 0 100 100" aria-hidden="true">
     <rect x="32" y="22" width="36" height="56" rx="6" fill="none"></rect>
     <circle cx="50" cy="70" r="2.5"></circle>
     <path d="M45 35 H55" fill="none"></path>
   </svg>`,
-
   "電池残量（少ない）": `
   <svg viewBox="0 0 100 100" aria-hidden="true">
     <rect x="24" y="40" width="52" height="20" rx="3" fill="none"></rect>
     <rect x="76" y="45" width="6" height="10" fill="none"></rect>
     <rect x="28" y="44" width="10" height="12" fill="none"></rect>
   </svg>`,
-
   "電池残量（多い）": `
   <svg viewBox="0 0 100 100" aria-hidden="true">
     <rect x="24" y="40" width="52" height="20" rx="3" fill="none"></rect>
     <rect x="76" y="45" width="6" height="10" fill="none"></rect>
     <rect x="28" y="44" width="40" height="12" fill="none"></rect>
   </svg>`,
-
-  "default": `
+  default: `
   <svg viewBox="0 0 100 100" aria-hidden="true">
     <circle cx="50" cy="50" r="24" fill="none"></circle>
     <path d="M50 28 V72" fill="none"></path>
@@ -182,15 +167,45 @@ const ICONS = {
   </svg>`
 };
 
-// -------------------- DOM helpers --------------------
+// -------------------- DOM --------------------
 const el = (id) => document.getElementById(id);
 
+// 画面要素（存在しなくても落ちない）
+const screens = {
+  deck: el("screen-deck"),
+  reveal: el("screen-reveal"),
+  finished: el("screen-finished"),
+};
+
+// -------------------- Utils --------------------
 function shuffle(array) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [array[i], array[j]] = [array[j], array[i]];
   }
   return array;
+}
+
+function setScreen(screenId) {
+  const list = [screens.deck, screens.reveal, screens.finished].filter(Boolean);
+
+  list.forEach((node) => {
+    node.classList.remove("screen-active");
+    node.setAttribute("aria-hidden", "true");
+    // inertが効くブラウザでは、非表示画面のフォーカス/クリックを無効化できる
+    try {
+      node.inert = true;
+    } catch (_) {}
+  });
+
+  const target = el(screenId);
+  if (!target) return;
+
+  target.classList.add("screen-active");
+  target.setAttribute("aria-hidden", "false");
+  try {
+    target.inert = false;
+  } catch (_) {}
 }
 
 // -------------------- State --------------------
@@ -206,50 +221,57 @@ function setTotals() {
   });
 }
 
-function setScreen(name) {
-  const ids = ["screen-deck", "screen-reveal", "screen-finished"];
-  ids.forEach((sid) => el(sid)?.classList.remove("screen-active"));
-  el(name)?.classList.add("screen-active");
-}
-
 function updateCounters() {
-  el("remain") && (el("remain").textContent = String(deck.length));
-  el("remain2") && (el("remain2").textContent = String(deck.length));
-  el("drawn") && (el("drawn").textContent = String(drawnCount));
+  const remain = String(deck.length);
+  const drawn = String(drawnCount);
+
+  const r1 = el("remain");
+  const r2 = el("remain2");
+  const d = el("drawn");
+
+  if (r1) r1.textContent = remain;
+  if (r2) r2.textContent = remain;
+  if (d) d.textContent = drawn;
 }
 
 function renderIconForCard(card) {
   const box = el("card-icon");
-  if (!box) return; // HTMLに置いてなければ何もしない（落とさない）
+  if (!box) return;
 
-  const svg = ICONS[card.title] || ICONS["default"];
+  const svg = ICONS[card.title] || ICONS.default || "";
   box.innerHTML = svg;
 
-  // ネオン線画っぽく統一（CSSが無くても最低限見えるように）
   const s = box.querySelector("svg");
-  if (s) {
-    s.setAttribute("width", "100%");
-    s.setAttribute("height", "100%");
-    s.style.maxWidth = "120px";
-    s.style.maxHeight = "120px";
-    s.style.display = "block";
-    s.style.margin = "6px 0 10px";
-  }
+  if (!s) return;
+
+  // CSSがまだ整ってなくても最低限破綻しない表示
+  s.setAttribute("width", "100%");
+  s.setAttribute("height", "100%");
+  s.style.display = "block";
+  s.style.maxWidth = "120px";
+  s.style.maxHeight = "120px";
+  s.style.margin = "6px auto 10px";
 }
 
 function newGame() {
   deck = shuffle(CARDS.map((c) => ({ ...c })));
   drawnCount = 0;
+
   setTotals();
   updateCounters();
   setScreen("screen-deck");
 }
 
 function showCard(card) {
-  el("card-index") && (el("card-index").textContent = String(drawnCount));
-  el("card-title") && (el("card-title").textContent = card.title);
-  el("card-subtitle") && (el("card-subtitle").textContent = card.category);
-  el("card-rule") && (el("card-rule").textContent = card.rule);
+  const idx = el("card-index");
+  const title = el("card-title");
+  const subtitle = el("card-subtitle");
+  const rule = el("card-rule");
+
+  if (idx) idx.textContent = String(drawnCount);
+  if (title) title.textContent = card.title;
+  if (subtitle) subtitle.textContent = card.category;
+  if (rule) rule.textContent = card.rule;
 
   renderIconForCard(card);
   updateCounters();
@@ -261,6 +283,7 @@ function drawCard() {
     setScreen("screen-finished");
     return;
   }
+
   const card = deck.pop();
   drawnCount += 1;
   showCard(card);
@@ -270,16 +293,8 @@ function drawCard() {
 function bindEvents() {
   el("btn-draw")?.addEventListener("click", drawCard);
 
-  // 「次のカードへ」= 次を引く（残り0なら終了画面）
-  el("btn-next")?.addEventListener("click", () => {
-    if (deck.length === 0) {
-      setScreen("screen-finished");
-      return;
-    }
-    drawCard();
-  });
-
-  // 戻るボタンは使わない（HTMLから削除済み前提）
+  // 「次のカードへ」= 次を引く（残り0なら drawCard() が終了画面へ）
+  el("btn-next")?.addEventListener("click", drawCard);
 
   el("btn-reset")?.addEventListener("click", () => {
     const ok = confirm("最初からやり直しますか？（カードはシャッフルされます）");

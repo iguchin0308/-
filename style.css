@@ -355,3 +355,45 @@ body::after{
 @media (prefers-reduced-motion: reduce){
   *{ transition: none !important; }
 }
+/* ------------------------------
+   Reveal icon area (minimal)
+------------------------------ */
+.card-icon{
+  width: 120px;
+  height: 120px;
+  margin: 10px auto 6px;
+  display: grid;
+  place-items: center;
+
+  /* ふわっとネオン */
+  filter: drop-shadow(0 0 14px rgba(34,230,255,.20))
+          drop-shadow(0 0 24px rgba(255,79,216,.18));
+}
+
+.card-icon svg{
+  width: 100%;
+  height: 100%;
+}
+
+/* ネオン線画の見た目を強制（黒丸事故対策） */
+.card-icon svg *{
+  vector-effect: non-scaling-stroke;
+  stroke: rgba(34,230,255,.95);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+}
+
+/* ------------------------------
+   Layout helpers used in HTML
+------------------------------ */
+.actions-one{ display: block; }
+.btn-full{ width: 100%; }
+
+/* ------------------------------
+   Optional: inactive screen safety
+------------------------------ */
+.screen[aria-hidden="true"]{
+  pointer-events: none;
+}

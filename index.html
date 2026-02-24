@@ -4,103 +4,141 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>つぶれてもいいですか？｜飲みゲー</title>
-  <link rel="stylesheet" href="style.css" />
+
+  <meta name="description" content="カードを引いて盛り上がる飲み会ゲーム。無理せず楽しく飲もう！" />
+  <meta name="theme-color" content="#0b0f1a" />
+
+  <link rel="stylesheet" href="./style.css" />
 </head>
+
 <body>
   <div class="app">
-    <header class="topbar">
+    <!-- Header -->
+    <header class="topbar" role="banner">
       <div class="title">
         <h1>つぶれてもいいですか？</h1>
-        <p class="sub">カードを引いて盛り上げよう（全<span id="total">--</span>枚）</p>
+        <p class="sub">
+          カードを引いて盛り上げよう（全<span id="total">--</span>枚）
+        </p>
       </div>
-      <button id="btn-reset" class="btn btn-ghost" type="button" aria-label="最初からやり直す">
+
+      <button
+        id="btn-reset"
+        class="btn btn-ghost"
+        type="button"
+        aria-label="最初からやり直す"
+      >
         リセット
       </button>
     </header>
 
-    <!-- Screen: Deck -->
-    <main id="screen-deck" class="screen screen-active" role="region" aria-label="カードを引く画面">
-      <section class="card card-deck">
-        <div class="deck-info">
-          <div class="pill">
-            残り <span id="remain">--</span> / <span id="total2">--</span>
+    <!-- App Main (screen container) -->
+    <div class="screens" role="main" aria-label="飲みゲー本体">
+
+      <!-- Screen: Deck -->
+      <section
+        id="screen-deck"
+        class="screen screen-active"
+        role="region"
+        aria-label="カードを引く画面"
+      >
+        <div class="card card-deck">
+          <div class="deck-info" aria-label="デッキ情報">
+            <div class="pill">
+              残り <span id="remain">--</span> / <span id="total2">--</span>
+            </div>
+            <div class="pill subtle">
+              引いた枚数 <span id="drawn">0</span>
+            </div>
           </div>
-          <div class="pill subtle">
-            引いた枚数 <span id="drawn">0</span>
+
+          <button id="btn-draw" class="draw-btn" type="button">
+            <span class="draw-btn__top">カードを引く</span>
+            <span class="draw-btn__bottom">タップして1枚ドロー</span>
+          </button>
+
+          <p class="hint">※ お酒は無理せず、楽しく飲もう！</p>
+        </div>
+
+        <div class="card card-mini">
+          <h2>使い方</h2>
+          <ol>
+            <li>2人以上でスタート</li>
+            <li>順番に「カードを引く」</li>
+            <li>カードの指示に従う</li>
+            <li><span id="total5">--</span>枚引き切ったら終了</li>
+          </ol>
+        </div>
+      </section>
+
+      <!-- Screen: Reveal -->
+      <section
+        id="screen-reveal"
+        class="screen"
+        role="region"
+        aria-label="カード表示画面"
+      >
+        <div class="card card-reveal">
+          <div class="badge" aria-label="進行状況">
+            <span id="card-index">1</span> / <span id="total3">--</span>
+          </div>
+
+          <!-- アイコン置き場（後で差し替え） -->
+          <div class="card-icon" id="card-icon" aria-hidden="true"></div>
+
+          <div class="reveal-title">
+            <h2 id="card-title">カード名</h2>
+            <p id="card-subtitle" class="subtle">カテゴリ</p>
+          </div>
+
+          <div class="rule-box" aria-label="カードの指示">
+            <p id="card-rule">ここにルールが表示されます。</p>
+          </div>
+
+          <div class="actions actions-one">
+            <button id="btn-next" class="btn btn-primary btn-full" type="button">
+              次のカードへ
+            </button>
           </div>
         </div>
 
-        <button id="btn-draw" class="draw-btn" type="button">
-          <span class="draw-btn__top">カードを引く</span>
-          <span class="draw-btn__bottom">タップして1枚ドロー</span>
-        </button>
-
-        <div class="hint">
-          <p>※ お酒は無理せず、楽しく飲もう！</p>
+        <div class="card card-mini">
+          <h2>残り</h2>
+          <p class="big"><span id="remain2">--</span> 枚</p>
         </div>
       </section>
 
-      <section class="card card-mini">
-        <h2>使い方</h2>
-        <ol>
-          <li>2人以上でスタート</li>
-          <li>順番に「カードを引く」</li>
-          <li>カードの指示に従う</li>
-          <li><span id="total5">--</span>枚引き切ったら終了</li>
-        </ol>
-      </section>
-    </main>
+      <!-- Screen: Finished -->
+      <section
+        id="screen-finished"
+        class="screen"
+        role="region"
+        aria-label="終了画面"
+      >
+        <div class="card card-finished">
+          <h2>終了！</h2>
+          <p class="big"><span id="total4">--</span>枚、引き切りました 🍻</p>
+          <p class="subtle">二次会に行くなら、帰りの安全もセットで。</p>
 
-    <!-- Screen: Reveal -->
-    <main id="screen-reveal" class="screen" role="region" aria-label="カード表示画面">
-      <section class="card card-reveal">
-        <div class="badge">
-          <span id="card-index">1</span> / <span id="total3">--</span>
-        </div>
-
-        <!-- ★アイコン置き場（ここにネオン線画SVGを差し込む） -->
-        <div class="card-icon" id="card-icon" aria-hidden="true"></div>
-
-        <div class="reveal-title">
-          <h2 id="card-title">カード名</h2>
-          <p id="card-subtitle" class="subtle">カテゴリ</p>
-        </div>
-
-        <div class="rule-box">
-          <p id="card-rule">ここにルールが表示されます。</p>
-        </div>
-
-        <!-- ★戻るを消して、次のカードへをフル幅 -->
-        <div class="actions actions-one">
-          <button id="btn-next" class="btn btn-primary btn-full" type="button">次のカードへ</button>
+          <div class="actions">
+            <button id="btn-restart" class="btn btn-primary" type="button">
+              もう1回やる
+            </button>
+            <button id="btn-finish-back" class="btn btn-ghost" type="button">
+              デッキ画面へ
+            </button>
+          </div>
         </div>
       </section>
 
-      <section class="card card-mini">
-        <h2>残り</h2>
-        <p class="big"><span id="remain2">--</span> 枚</p>
-      </section>
-    </main>
+    </div>
 
-    <!-- Screen: Finished -->
-    <main id="screen-finished" class="screen" role="region" aria-label="終了画面">
-      <section class="card card-finished">
-        <h2>終了！</h2>
-        <p class="big"><span id="total4">--</span>枚、引き切りました 🍻</p>
-        <p class="subtle">二次会に行くなら、帰りの安全もセットで。</p>
-        <div class="actions">
-          <button id="btn-restart" class="btn btn-primary" type="button">もう1回やる</button>
-          <button id="btn-finish-back" class="btn btn-ghost" type="button">デッキ画面へ</button>
-        </div>
-      </section>
-    </main>
-
-    <footer class="footer">
-      <span class="subtle">© 飲みゲー（GitHub Pages向け）</span>
+    <footer class="footer" role="contentinfo">
+      <small class="subtle">© 飲みゲー（GitHub Pages向け）</small>
     </footer>
   </div>
 
-  <!-- ★ここ重要：キャッシュ破り（更新するたびに数字変える） -->
+  <!-- キャッシュ破り（更新するたびに数字変える） -->
   <script src="./script.js?v=102"></script>
 </body>
 </html>

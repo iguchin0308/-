@@ -1,289 +1,53 @@
 const ICONS = {
-  "白熊": `
-  <svg viewBox="0 0 100 100" aria-hidden="true">
-    <!-- neon bear -->
-    <path d="M30 30 Q30 18 42 20 Q46 12 54 12 Q62 12 66 20 Q78 18 78 30 Q88 40 86 54 Q86 78 50 84 Q14 78 14 54 Q12 40 22 30 Z"></path>
-    <circle cx="40" cy="50" r="3"></circle>
-    <circle cx="60" cy="50" r="3"></circle>
-    <path d="M47 58 Q50 61 53 58"></path>
-    <path d="M44 62 Q50 68 56 62"></path>
-  </svg>`,
+  // プロフィール/服装
+  "白熊": "./icons/bear.png",
+  "誕生日ボーイ&ガール": "./icons/cake.png",
+  "最年長": "./icons/crown_person.png",
+  "最年少": "./icons/baby.png",
 
-  "ずっとも": `
-  <svg viewBox="0 0 100 100" aria-hidden="true">
-    <!-- two chairs + heart -->
-    <path d="M18 70 V48 Q18 40 26 40 H34 Q42 40 42 48 V70"></path>
-    <path d="M58 70 V48 Q58 40 66 40 H74 Q82 40 82 48 V70"></path>
-    <path d="M42 58 H58"></path>
-    <path d="M50 34
-             Q45 28 40 32
-             Q36 36 40 40
-             L50 50
-             L60 40
-             Q64 36 60 32
-             Q55 28 50 34 Z"></path>
-  </svg>`,
+  // 休憩/セーフ
+  "水チェイサー": "./icons/water_glass.png",
+  "セーフティ": "./icons/check_badge.png",
 
-  "誕生日ボーイ&ガール": `
-  <svg viewBox="0 0 100 100" aria-hidden="true">
-    <!-- cake + candle -->
-    <path d="M28 74 V54 Q28 48 34 48 H66 Q72 48 72 54 V74"></path>
-    <path d="M28 60 H72"></path>
-    <path d="M50 22 V48"></path>
-    <path d="M46 28 Q50 18 54 28 Q50 32 46 28 Z"></path>
-    <path d="M38 54 L42 54"></path>
-    <path d="M58 66 L62 66"></path>
-  </svg>`,
+  // 席順系
+  "ずっとも": "./icons/seats_heart.png",
+  "右隣": "./icons/arrow_right_seat.png",
+  "左隣": "./icons/arrow_left_seat.png",
+  "向かい": "./icons/face_to_face.png",
+  "偶数席": "./icons/seats_even.png",
+  "奇数席": "./icons/seats_odd.png",
 
-  "水チェイサー": `
-  <svg viewBox="0 0 100 100" aria-hidden="true">
-    <!-- glass -->
-    <path d="M34 22 H66"></path>
-    <path d="M36 22 L40 80 H60 L64 22"></path>
-    <!-- water line -->
-    <path d="M41 56 Q50 62 59 56"></path>
-    <path d="M43 64 Q50 68 57 64"></path>
-    <!-- droplet -->
-    <path d="M50 30 Q56 40 50 46 Q44 40 50 30 Z"></path>
-  </svg>`,
+  // 即決/ゲーム
+  "じゃんけん王": "./icons/crown_fist.png",
+  "共通点探し": "./icons/venn.png",
+  "指差し": "./icons/point_target.png",
+  "人気者": "./icons/phone_notification.png",
+  "ロック画面": "./icons/lock_phone.png",
+  "電池残量（少ない）": "./icons/battery_low.png",
+  "電池残量（多い）": "./icons/battery_high.png",
+  "3・2・1": "./icons/countdown.png",
+  "多数決": "./icons/vote.png",
+  "ワンワード": "./icons/one_word.png",
+  "二択ジャッジ": "./icons/choice_two.png",
+  "なにした": "./icons/question.png",
+  "連想ゲーム": "./icons/brain_spark.png",
+  "一斉に乾杯": "./icons/glass_raise.png",
 
-  "じゃんけん王": `
-  <svg viewBox="0 0 100 100" aria-hidden="true">
-    <!-- crown -->
-    <path d="M28 44 L38 30 L50 44 L62 30 L72 44"></path>
-    <path d="M28 44 H72"></path>
-    <!-- fist -->
-    <path d="M34 78 V56 Q34 48 42 48 H58 Q66 48 66 56 V78"></path>
-    <path d="M42 48 V38"></path>
-    <path d="M50 48 V36"></path>
-    <path d="M58 48 V38"></path>
-  </svg>`,
+  // 心理戦/罰/全体
+  "メデゥーサ": "./icons/medusa_eye.png",
+  "独裁": "./icons/spotlight_person.png",
+  "乾杯": "./icons/cheers.png",
+  "倍々ファイト": "./icons/double_drink.png",
+  "究極の選択": "./icons/split_choice_secret.png",
+  "お残しチェック": "./icons/glass_level.png",
 
-  "共通点探し": `
-  <svg viewBox="0 0 100 100" aria-hidden="true">
-    <!-- venn + spark -->
-    <circle cx="44" cy="54" r="18"></circle>
-    <circle cx="56" cy="54" r="18"></circle>
-    <path d="M50 26 V34"></path>
-    <path d="M46 30 H54"></path>
-    <path d="M50 40 Q50 44 50 48"></path>
-  </svg>`,
+  // 効果系
+  "バリア": "./icons/shield.png",
+  "ガードマン": "./icons/guard_shield.png",
 
-  "指差し": `
-  <svg viewBox="0 0 100 100" aria-hidden="true">
-    <!-- finger -->
-    <path d="M40 80 V46 Q40 34 50 34 Q60 34 60 46 V68"></path>
-    <path d="M45 36 V22"></path>
-    <path d="M52 34 V20"></path>
-    <path d="M58 36 V22"></path>
-    <!-- target -->
-    <circle cx="76" cy="70" r="10"></circle>
-    <circle cx="76" cy="70" r="4"></circle>
-    <path d="M76 60 V80"></path>
-    <path d="M66 70 H86"></path>
-  </svg>`,
+  // チャレンジ系
+  "ラッパー": "./icons/mic_sound.png",
 
-  "独裁": `
-  <svg viewBox="0 0 100 100" aria-hidden="true">
-    <!-- spotlight cone -->
-    <path d="M16 18 L46 10"></path>
-    <path d="M16 18 L46 30"></path>
-    <path d="M20 22 L44 16"></path>
-    <!-- person -->
-    <circle cx="58" cy="36" r="9"></circle>
-    <path d="M46 78 Q58 60 70 78"></path>
-    <path d="M58 45 V62"></path>
-  </svg>`,
-
-  "右隣": `
-  <svg viewBox="0 0 100 100" aria-hidden="true">
-    <!-- chair -->
-    <path d="M20 76 V56 Q20 48 28 48 H38 Q46 48 46 56 V76"></path>
-    <!-- arrow -->
-    <path d="M44 40 H74"></path>
-    <path d="M66 32 L78 40 L66 48"></path>
-  </svg>`,
-
-  "左隣": `
-  <svg viewBox="0 0 100 100" aria-hidden="true">
-    <!-- chair -->
-    <path d="M54 76 V56 Q54 48 62 48 H72 Q80 48 80 56 V76"></path>
-    <!-- arrow -->
-    <path d="M56 40 H26"></path>
-    <path d="M34 32 L22 40 L34 48"></path>
-  </svg>`,
-
-  "向かい": `
-  <svg viewBox="0 0 100 100" aria-hidden="true">
-    <!-- two faces -->
-    <circle cx="34" cy="44" r="8"></circle>
-    <circle cx="66" cy="44" r="8"></circle>
-    <path d="M24 76 Q34 62 44 76"></path>
-    <path d="M56 76 Q66 62 76 76"></path>
-    <!-- eye contact -->
-    <path d="M42 44 H58"></path>
-    <path d="M46 40 Q50 38 54 40"></path>
-  </svg>`,
-
-  "最年長": `
-  <svg viewBox="0 0 100 100" aria-hidden="true">
-    <!-- crown -->
-    <path d="M32 32 L42 18 L50 32 L58 18 L68 32"></path>
-    <path d="M32 32 H68"></path>
-    <!-- person -->
-    <circle cx="50" cy="50" r="10"></circle>
-    <path d="M34 82 Q50 62 66 82"></path>
-  </svg>`,
-
-  "最年少": `
-  <svg viewBox="0 0 100 100" aria-hidden="true">
-    <!-- baby -->
-    <circle cx="50" cy="48" r="20"></circle>
-    <path d="M42 44 Q46 42 50 44 Q54 42 58 44"></path>
-    <path d="M44 56 Q50 62 56 56"></path>
-    <!-- pacifier -->
-    <circle cx="50" cy="68" r="7"></circle>
-    <path d="M44 68 H56"></path>
-    <path d="M50 61 V75"></path>
-  </svg>`,
-
-  "メデゥーサ": `
-  <svg viewBox="0 0 100 100" aria-hidden="true">
-    <!-- eye -->
-    <ellipse cx="50" cy="54" rx="28" ry="18"></ellipse>
-    <circle cx="50" cy="54" r="6"></circle>
-    <!-- snakes -->
-    <path d="M30 36 Q20 26 28 18"></path>
-    <path d="M42 28 Q38 18 48 14"></path>
-    <path d="M58 28 Q62 18 52 14"></path>
-    <path d="M70 36 Q80 26 72 18"></path>
-  </svg>`,
-
-  "人気者": `
-  <svg viewBox="0 0 100 100" aria-hidden="true">
-    <!-- phone -->
-    <path d="M34 18 H66 Q70 18 70 22 V78 Q70 82 66 82 H34 Q30 82 30 78 V22 Q30 18 34 18 Z"></path>
-    <circle cx="50" cy="72" r="2.5"></circle>
-    <!-- notif bubble -->
-    <circle cx="72" cy="28" r="10" class="pink"></circle>
-    <path d="M72 22 V34" class="pink"></path>
-    <path d="M66 28 H78" class="pink"></path>
-  </svg>`,
-
-  "ラッパー": `
-  <svg viewBox="0 0 100 100" aria-hidden="true">
-    <!-- mic -->
-    <path d="M50 22 Q64 22 64 36 Q64 50 50 50 Q36 50 36 36 Q36 22 50 22 Z"></path>
-    <path d="M50 50 V64"></path>
-    <path d="M42 64 H58"></path>
-    <path d="M44 70 H56"></path>
-    <!-- sound -->
-    <path d="M72 34 Q82 42 72 50"></path>
-    <path d="M78 30 Q92 42 78 54"></path>
-  </svg>`,
-
-  "乾杯": `
-  <svg viewBox="0 0 100 100" aria-hidden="true">
-    <!-- glass left -->
-    <path d="M24 26 L42 54 H34 L16 26 Z"></path>
-    <!-- glass right -->
-    <path d="M76 26 L58 54 H66 L84 26 Z"></path>
-    <!-- clink -->
-    <path d="M42 54 Q50 70 58 54"></path>
-    <!-- spark -->
-    <path d="M50 16 V26" class="yellow"></path>
-    <path d="M46 21 H54" class="yellow"></path>
-    <path d="M42 18 L46 22" class="yellow"></path>
-    <path d="M58 18 L54 22" class="yellow"></path>
-  </svg>`,
-
-  "究極の選択": `
-  <svg viewBox="0 0 100 100" aria-hidden="true">
-    <!-- split -->
-    <path d="M50 18 V82"></path>
-    <!-- cup -->
-    <path d="M18 34 H38 L36 78 H20 Z"></path>
-    <path d="M38 44 Q46 44 46 52 Q46 60 38 60"></path>
-    <!-- secret (mask) -->
-    <path d="M62 50 Q62 40 72 40 Q82 40 82 50 Q82 58 72 64 Q62 58 62 50 Z"></path>
-    <path d="M72 64 V78"></path>
-  </svg>`,
-
-  "お残しチェック": `
-  <svg viewBox="0 0 100 100" aria-hidden="true">
-    <!-- glass -->
-    <path d="M30 22 H70"></path>
-    <path d="M32 22 L38 82 H62 L68 22"></path>
-    <!-- level -->
-    <path d="M42 62 H58" class="pink"></path>
-    <path d="M44 66 Q50 70 56 66" class="pink"></path>
-    <!-- exclamation -->
-    <path d="M78 40 V56" class="pink"></path>
-    <circle cx="78" cy="62" r="2" class="pink"></circle>
-  </svg>`,
-
-  "ロック画面": `
-  <svg viewBox="0 0 100 100" aria-hidden="true">
-    <!-- phone -->
-    <path d="M34 16 H66 Q72 16 72 22 V78 Q72 84 66 84 H34 Q28 84 28 78 V22 Q28 16 34 16 Z"></path>
-    <circle cx="50" cy="74" r="2.5"></circle>
-    <!-- lock -->
-    <path d="M42 52 V42 Q50 34 58 42 V52"></path>
-    <rect x="40" y="52" width="20" height="16" rx="4"></rect>
-  </svg>`,
-
-  "電池残量（少ない）": `
-  <svg viewBox="0 0 100 100" aria-hidden="true">
-    <rect x="20" y="42" width="56" height="20" rx="5"></rect>
-    <rect x="76" y="46" width="6" height="12" rx="2"></rect>
-    <rect x="24" y="46" width="12" height="12" rx="3" class="pink"></rect>
-    <path d="M50 28 V36" class="pink"></path>
-    <path d="M47 32 H53" class="pink"></path>
-  </svg>`,
-
-  "電池残量（多い）": `
-  <svg viewBox="0 0 100 100" aria-hidden="true">
-    <rect x="20" y="42" width="56" height="20" rx="5"></rect>
-    <rect x="76" y="46" width="6" height="12" rx="2"></rect>
-    <rect x="24" y="46" width="46" height="12" rx="3" class="yellow"></rect>
-    <path d="M50 28 V36" class="yellow"></path>
-    <path d="M47 32 H53" class="yellow"></path>
-  </svg>`,
-
-  "バリア": `
-  <svg viewBox="0 0 100 100" aria-hidden="true">
-    <!-- shield -->
-    <path d="M50 14 L76 28 V56 Q50 86 24 56 V28 Z"></path>
-    <!-- inner line -->
-    <path d="M50 18 V82" class="pink"></path>
-    <path d="M34 44 Q50 54 66 44"></path>
-  </svg>`,
-
-  "ガードマン": `
-  <svg viewBox="0 0 100 100" aria-hidden="true">
-    <!-- person -->
-    <circle cx="44" cy="36" r="9"></circle>
-    <path d="M30 82 V58 Q44 50 58 58 V82"></path>
-    <!-- shield -->
-    <path d="M70 40 L86 50 V66 Q78 78 70 84 Q62 78 54 66 V50 Z"></path>
-    <path d="M70 44 V82" class="pink"></path>
-  </svg>`,
-
-  "セーフティ": `
-  <svg viewBox="0 0 100 100" aria-hidden="true">
-    <circle cx="50" cy="52" r="26"></circle>
-    <path d="M38 52 L46 60 L64 42" class="yellow"></path>
-    <path d="M50 22 V28" class="yellow"></path>
-    <path d="M47 25 H53" class="yellow"></path>
-  </svg>`,
-
-  "default": `
-  <svg viewBox="0 0 100 100" aria-hidden="true">
-    <!-- card outline (nicer) -->
-    <path d="M30 18 H70 Q78 18 78 26 V74 Q78 82 70 82 H30 Q22 82 22 74 V26 Q22 18 30 18 Z"></path>
-    <path d="M34 36 H66"></path>
-    <path d="M34 50 H58"></path>
-    <path d="M34 64 H54"></path>
-    <path d="M62 64 H66"></path>
-  </svg>`
+  // fallback
+  "default": "./icons/default.png",
 };

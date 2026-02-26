@@ -8,7 +8,7 @@
   <meta name="description" content="カードを引いて盛り上がる飲み会ゲーム。無理せず楽しく飲もう！" />
   <meta name="theme-color" content="#0b0f1a" />
 
-  <!-- ✅ CSSもキャッシュ破り -->
+  <!-- ✅ CSS（キャッシュ破り） -->
   <link rel="stylesheet" href="./style.css?v=102" />
 </head>
 
@@ -102,7 +102,7 @@
     </footer>
   </div>
 
-  <!-- ✅ JSもキャッシュ破り -->
-  <script src="./script.js?v=102"></script>
+  <!-- ✅ JS（deferでDOM準備後に確実に動かす + キャッシュ破り） -->
+  <script src="./script.js?v=102" defer></script>
 </body>
 </html>

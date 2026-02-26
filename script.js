@@ -2,17 +2,8 @@
 
 /**
  * 飲みゲー（カード枚数はCARDS.lengthで自動）
- * 目的：その場で即決・盛り上がるカード中心
- *
- * 仕様：
- * - 戻るボタンなし（btn-back を使わない）
- * - reveal 画面でカードごとにPNGアイコン表示（#card-icon）
- * - ない場合でもエラーにならない
- * - PNGが404なら default にフォールバック
- *
- * 前提：
- * - index.html に #card-icon がある
- * - PNGを ./icons/ フォルダに置く（例：./icons/bear.png）
+ * - index.html に #card-icon がある（<div id="card-icon" class="card-icon"></div>）
+ * - PNGを ./icons/ に置く（例：./icons/bear.png）
  */
 
 // -------------------- Cards --------------------
@@ -66,58 +57,21 @@ const CARDS = [
 
   { title: "なにした", category: "即決", rule: "直近一週間で○○した人は飲む（○○は引いた人が決める）。" },
 
-  { title: "二択ジャッジ", category: "即決", rule: "引いた人が二択を出す。引いた人の答えを他の人が予想し、外れた人が飲む。" },
+  { title: "二択ジャッジ", category: "即決", rule: "引いた人が二択を出す。引いた人が回答を考え、他の人は予想。外れた人は飲む。" },
   { title: "多数決", category: "即決", rule: "引いた人が質問を1つ。少数派が飲む。" },
-  { title: "ワンワード", category: "即決", rule: "引いた人がお題。全員漢字1語で答える。被った人が飲む。" },
-  { title: "3・2・1", category: "即決", rule: "せーので1〜3の数字。少数派が飲む（同数なら同数）。" },
+  { title: "ワンワード", category: "即決", rule: "引いた人がお題を1つ。全員漢字1語で答える。被った人が飲む。" },
+  { title: "3・2・1", category: "即決", rule: "全員でせーので1〜3の数字を指で出す。一番少数派の数字の人が飲む（同数なら同数）。" },
 ];
 
-// -------------------- Icons (PNG) --------------------
+// -------------------- Icons --------------------
 const ICONS = {
   "白熊": "./icons/bear.png",
-  "ずっとも": "./icons/seat_heart.png",
-  "誕生日ボーイ&ガール": "./icons/cake.png",
-  "水チェイサー": "./icons/water.png",
-  "じゃんけん王": "./icons/crown_hand.png",
-  "共通点探し": "./icons/venn.png",
-  "指差し": "./icons/point.png",
-  "独裁": "./icons/spotlight.png",
-  "右隣": "./icons/arrow_right.png",
-  "左隣": "./icons/arrow_left.png",
-  "向かい": "./icons/facing.png",
-  "偶数席": "./icons/arrow_right.png",
-  "奇数席": "./icons/arrow_left.png",
-  "最年長": "./icons/crown.png",
-  "最年少": "./icons/baby.png",
-  "メデゥーサ": "./icons/medusa_eye.png",
-  "遅刻": "./icons/spotlight.png",
-  "人気者": "./icons/phone_heart.png",
-  "キス": "./icons/seat_heart.png",
-  "ラッパー": "./icons/mic.png",
-  "乾杯": "./icons/clink.png",
-  "究極の選択": "./icons/choice.png",
-  "倍々ファイト": "./icons/crown_hand.png",
-  "お残しチェック": "./icons/glass_level.png",
-  "ロック画面": "./icons/lockscreen.png",
-  "電池残量（少ない）": "./icons/battery_low.png",
-  "電池残量（多い）": "./icons/battery_full.png",
-  "一斉に乾杯": "./icons/clink.png",
-  "連想ゲーム": "./icons/venn.png",
-  "セーフティ": "./icons/check.png",
-  "バリア": "./icons/shield.png",
-  "ガードマン": "./icons/guard.png",
-  "なにした": "./icons/point.png",
-  "二択ジャッジ": "./icons/choice.png",
-  "多数決": "./icons/venn.png",
-  "ワンワード": "./icons/phone_heart.png",
-  "3・2・1": "./icons/point.png",
   default: "./icons/target.png",
 };
 
 // -------------------- DOM --------------------
 const el = (id) => document.getElementById(id);
 
-// 画面要素（存在しなくても落ちない）
 const screens = {
   deck: el("screen-deck"),
   reveal: el("screen-reveal"),
@@ -135,23 +89,18 @@ function shuffle(array) {
 
 function setScreen(screenId) {
   const list = [screens.deck, screens.reveal, screens.finished].filter(Boolean);
-
-  list.forEach((node) => {
+  for (const node of list) {
     node.classList.remove("screen-active");
     node.setAttribute("aria-hidden", "true");
-    try {
-      node.inert = true;
-    } catch (_) {}
-  });
+    try { node.inert = true; } catch (e) {}
+  }
 
   const target = el(screenId);
   if (!target) return;
 
   target.classList.add("screen-active");
   target.setAttribute("aria-hidden", "false");
-  try {
-    target.inert = false;
-  } catch (_) {}
+  try { target.inert = false; } catch (e) {}
 }
 
 // -------------------- State --------------------
@@ -170,11 +119,9 @@ function setTotals() {
 function updateCounters() {
   const remain = String(deck.length);
   const drawn = String(drawnCount);
-
   const r1 = el("remain");
   const r2 = el("remain2");
   const d = el("drawn");
-
   if (r1) r1.textContent = remain;
   if (r2) r2.textContent = remain;
   if (d) d.textContent = drawn;
@@ -185,7 +132,7 @@ function renderIconForCard(card) {
   if (!box) return;
 
   const src = ICONS[card.title] || ICONS.default || "";
-  box.textContent = "";
+  box.innerHTML = "";
   if (!src) return;
 
   const img = document.createElement("img");
@@ -193,19 +140,10 @@ function renderIconForCard(card) {
   img.alt = "";
   img.decoding = "async";
   img.loading = "eager";
-
   img.onerror = () => {
-    if (img.src.endsWith(ICONS.default)) return;
+    if (img.src.endsWith("target.png")) return;
     img.src = ICONS.default;
   };
-
-  img.style.width = "100%";
-  img.style.height = "100%";
-  img.style.display = "block";
-  img.style.objectFit = "contain";
-  img.style.maxWidth = "120px";
-  img.style.maxHeight = "120px";
-  img.style.margin = "6px auto 10px";
 
   box.appendChild(img);
 }
@@ -213,7 +151,6 @@ function renderIconForCard(card) {
 function newGame() {
   deck = shuffle(CARDS.map((c) => ({ ...c })));
   drawnCount = 0;
-
   setTotals();
   updateCounters();
   setScreen("screen-deck");
@@ -240,34 +177,35 @@ function drawCard() {
     setScreen("screen-finished");
     return;
   }
-
   const card = deck.pop();
   drawnCount += 1;
   showCard(card);
 }
 
-// -------------------- Events --------------------
 function bindEvents() {
-  el("btn-draw")?.addEventListener("click", drawCard);
-  el("btn-next")?.addEventListener("click", drawCard);
+  const btnDraw = el("btn-draw");
+  const btnNext = el("btn-next");
+  const btnReset = el("btn-reset");
+  const btnRestart = el("btn-restart");
+  const btnFinishBack = el("btn-finish-back");
 
-  el("btn-reset")?.addEventListener("click", () => {
-    const ok = confirm("最初からやり直しますか？（カードはシャッフルされます）");
-    if (ok) newGame();
+  if (btnDraw) btnDraw.addEventListener("click", drawCard);
+  if (btnNext) btnNext.addEventListener("click", drawCard);
+
+  if (btnReset) btnReset.addEventListener("click", () => {
+    if (confirm("最初からやり直しますか？（カードはシャッフルされます）")) newGame();
   });
 
-  el("btn-restart")?.addEventListener("click", newGame);
-  el("btn-finish-back")?.addEventListener("click", () => setScreen("screen-deck"));
+  if (btnRestart) btnRestart.addEventListener("click", newGame);
+  if (btnFinishBack) btnFinishBack.addEventListener("click", () => setScreen("screen-deck"));
 }
 
-// -------------------- Boot --------------------
 (function boot() {
   try {
-    console.log(`飲みゲー：カード枚数 = ${CARDS.length}枚`);
     bindEvents();
     newGame();
   } catch (e) {
     console.error("script.js 起動エラー:", e);
-    alert("スクリプトでエラーが出ています。PCでF12→Consoleを確認してください。");
+    alert("スクリプトでエラーが出ています。F12→Consoleを確認してください。");
   }
 })();

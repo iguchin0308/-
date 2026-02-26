@@ -3,12 +3,13 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>つぶれちゃってもいいですか、、？｜飲みゲー</title>
+  <title>つぶれちゃってもいいですか？｜飲みゲー</title>
 
   <meta name="description" content="カードを引いて盛り上がる飲み会ゲーム。無理せず楽しく飲もう！" />
   <meta name="theme-color" content="#0b0f1a" />
 
-  <link rel="stylesheet" href="./style.css" />
+  <!-- ✅ CSSもキャッシュ破り -->
+  <link rel="stylesheet" href="./style.css?v=103" />
 </head>
 
 <body>
@@ -32,16 +33,10 @@
       </button>
     </header>
 
-    <!-- App Main (screen container) -->
+    <!-- App Main -->
     <div class="screens" role="main" aria-label="飲みゲー本体">
-
       <!-- Screen: Deck -->
-      <section
-        id="screen-deck"
-        class="screen screen-active"
-        role="region"
-        aria-label="カードを引く画面"
-      >
+      <section id="screen-deck" class="screen screen-active" role="region" aria-label="カードを引く画面">
         <div class="card card-deck">
           <div class="deck-info" aria-label="デッキ情報">
             <div class="pill">
@@ -72,20 +67,14 @@
       </section>
 
       <!-- Screen: Reveal -->
-      <section
-        id="screen-reveal"
-        class="screen"
-        role="region"
-        aria-label="カード表示画面"
-      >
+      <section id="screen-reveal" class="screen" role="region" aria-label="カード表示画面">
         <div class="card card-reveal">
           <div class="badge" aria-label="進行状況">
             <span id="card-index">1</span> / <span id="total3">--</span>
           </div>
 
-          <!-- ✅ アイコン置き場（PNG表示） -->
-          <!-- aria-hidden は付けない（画像を隠さない） -->
-          <div id="card-icon" class="card-icon" aria-label="カードのアイコン"></div>
+          <!-- ✅ ここ重要：id と class 両方ある -->
+          <div id="card-icon" class="card-icon" aria-hidden="true"></div>
 
           <div class="reveal-title">
             <h2 id="card-title">カード名</h2>
@@ -110,12 +99,7 @@
       </section>
 
       <!-- Screen: Finished -->
-      <section
-        id="screen-finished"
-        class="screen"
-        role="region"
-        aria-label="終了画面"
-      >
+      <section id="screen-finished" class="screen" role="region" aria-label="終了画面">
         <div class="card card-finished">
           <h2>終了！</h2>
           <p class="big"><span id="total4">--</span>枚、引き切りました 🍻</p>
@@ -131,7 +115,6 @@
           </div>
         </div>
       </section>
-
     </div>
 
     <footer class="footer" role="contentinfo">
@@ -139,8 +122,7 @@
     </footer>
   </div>
 
-  <!-- ✅ defer：DOM構築後にscriptを実行（スタートできない事故防止） -->
-  <!-- キャッシュ破りは残す -->
-  <script defer src="./script.js?v=103"></script>
+  <!-- ✅ JSもキャッシュ破り -->
+  <script src="./script.js?v=103"></script>
 </body>
 </html>

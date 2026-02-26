@@ -1,5 +1,6 @@
 /* =========================
-   NEON POP DRINK GAME
+   NEON POP DRINK GAME (MORE POP)
+   Drop-in upgrade for your current CSS
    ========================= */
 
 * { box-sizing: border-box; }
@@ -8,100 +9,217 @@ html, body { height: 100%; }
 body{
   margin: 0;
   font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
-  background: #000000;
-  color: #ffffff;
+  background: #000;
+  color: #fff;
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
 }
 
 /* =========================
-   Neon Variables
+   Neon Variables (Boost Pop)
    ========================= */
 :root{
   --neon-cyan: #22E6FF;
   --neon-pink: #FF4FD8;
   --neon-purple: #7B5CFF;
-  --glass: rgba(255,255,255,0.05);
-  --stroke: rgba(255,255,255,0.12);
+
+  --glass: rgba(255,255,255,0.06);
+  --stroke: rgba(255,255,255,0.14);
+
+  --shadow-cyan: rgba(34,230,255,0.35);
+  --shadow-pink: rgba(255,79,216,0.28);
+
+  --radius-xl: 26px;
+  --radius-lg: 20px;
+
+  --ease-out: cubic-bezier(.2,.9,.2,1);
+}
+
+/* =========================
+   Pop Background (grid + orbs + noise)
+   ========================= */
+body::before{
+  content:"";
+  position: fixed;
+  inset: 0;
+  pointer-events:none;
+  z-index:-3;
+  background:
+    radial-gradient(900px 500px at 15% 20%, rgba(255,79,216,0.18), transparent 60%),
+    radial-gradient(900px 500px at 85% 25%, rgba(34,230,255,0.18), transparent 60%),
+    radial-gradient(900px 600px at 50% 85%, rgba(123,92,255,0.16), transparent 60%);
+  filter: blur(2px);
+}
+
+body::after{
+  content:"";
+  position: fixed;
+  inset: 0;
+  pointer-events:none;
+  z-index:-2;
+  background:
+    linear-gradient(rgba(34,230,255,0.10) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,79,216,0.08) 1px, transparent 1px);
+  background-size: 44px 44px, 44px 44px;
+  opacity: .18;
+  mask-image: radial-gradient(circle at 50% 20%, black 40%, transparent 78%);
+}
+
+/* subtle film grain (no external image) */
+@supports (background: paint(something)) { /* noop, keep compatibility */ }
+.app::before{
+  content:"";
+  position: fixed;
+  inset:-20%;
+  pointer-events:none;
+  z-index:-1;
+  background:
+    repeating-linear-gradient(
+      0deg,
+      rgba(255,255,255,0.03),
+      rgba(255,255,255,0.03) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+  opacity:.06;
+  transform: rotate(6deg);
 }
 
 /* =========================
    Layout
    ========================= */
-
 .app{
   max-width: 820px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 22px 18px 26px;
   display: grid;
   gap: 18px;
 }
 
 .topbar{
-  display: flex;
+  display:flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16px;
-  border-radius: 18px;
-  background: var(--glass);
+  padding: 16px 16px;
+  border-radius: var(--radius-xl);
+  background: rgba(255,255,255,0.05);
   border: 1px solid var(--stroke);
-  backdrop-filter: blur(12px);
+  backdrop-filter: blur(14px);
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.05) inset,
+    0 18px 40px rgba(0,0,0,0.55),
+    0 0 28px rgba(34,230,255,0.10),
+    0 0 44px rgba(255,79,216,0.08);
+  position: relative;
+  overflow: hidden;
+}
+
+/* neon edge shimmer */
+.topbar::before{
+  content:"";
+  position:absolute;
+  inset: -2px;
+  border-radius: inherit;
+  background: linear-gradient(120deg,
+    transparent 0%,
+    rgba(34,230,255,0.25) 35%,
+    rgba(255,79,216,0.18) 55%,
+    transparent 75%
+  );
+  filter: blur(10px);
+  opacity: .35;
 }
 
 .title h1{
   margin: 0;
   font-size: 22px;
-  letter-spacing: .05em;
+  letter-spacing: .08em;
+  text-transform: uppercase;
   text-shadow:
-    0 0 6px var(--neon-cyan),
-    0 0 14px var(--neon-pink);
+    0 0 8px rgba(34,230,255,0.85),
+    0 0 18px rgba(255,79,216,0.70),
+    0 0 32px rgba(123,92,255,0.55);
 }
 
 .title .sub{
-  font-size: 13px;
-  opacity: .7;
+  font-size: 12.5px;
+  opacity: .78;
   margin-top: 6px;
+  letter-spacing: .02em;
 }
 
 .footer{
-  text-align: center;
-  opacity: .5;
+  text-align:center;
+  opacity:.55;
   font-size: 12px;
 }
 
 /* =========================
    Screens
    ========================= */
-
 .screen{ display:none; }
 .screen-active{ display:grid; gap:18px; }
 
 /* =========================
-   Cards (Glass Neon)
+   Cards (Glass + Neon frame)
    ========================= */
-
 .card{
   padding: 20px;
-  border-radius: 24px;
+  border-radius: var(--radius-xl);
   background: var(--glass);
   border: 1px solid var(--stroke);
   backdrop-filter: blur(18px);
   position: relative;
+  overflow: hidden;
   box-shadow:
-    0 0 0 1px rgba(255,255,255,0.04) inset,
-    0 0 30px rgba(34,230,255,0.15),
-    0 0 60px rgba(255,79,216,0.1);
+    0 0 0 1px rgba(255,255,255,0.05) inset,
+    0 16px 40px rgba(0,0,0,0.55),
+    0 0 34px rgba(34,230,255,0.12),
+    0 0 60px rgba(255,79,216,0.10);
+}
+
+/* neon gradient frame */
+.card::before{
+  content:"";
+  position:absolute;
+  inset:-2px;
+  border-radius: inherit;
+  background: linear-gradient(135deg,
+    rgba(34,230,255,0.55),
+    rgba(123,92,255,0.45),
+    rgba(255,79,216,0.55)
+  );
+  opacity:.22;
+  filter: blur(18px);
+  pointer-events:none;
+}
+
+/* sparkle dots */
+.card::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    radial-gradient(circle at 18% 28%, rgba(255,255,255,0.25) 0 1px, transparent 2px),
+    radial-gradient(circle at 70% 18%, rgba(255,255,255,0.20) 0 1px, transparent 2px),
+    radial-gradient(circle at 84% 68%, rgba(255,255,255,0.18) 0 1px, transparent 2px);
+  opacity:.35;
+  pointer-events:none;
 }
 
 /* =========================
    Pills
    ========================= */
-
 .pill{
   padding: 8px 12px;
   border-radius: 999px;
-  background: rgba(255,255,255,0.06);
-  border: 1px solid var(--stroke);
+  background: rgba(0,0,0,0.35);
+  border: 1px solid rgba(255,255,255,0.14);
   font-size: 13px;
+  letter-spacing: .02em;
+  box-shadow:
+    0 0 14px rgba(34,230,255,0.10),
+    0 0 18px rgba(255,79,216,0.08);
 }
 
 .deck-info{
@@ -112,70 +230,98 @@ body{
 }
 
 /* =========================
-   Draw Button (Main Neon)
+   Draw Button (More Pop + Shine)
    ========================= */
-
 .draw-btn{
   width:100%;
-  padding:22px 16px;
-  border-radius: 26px;
-  border: none;
-  cursor:pointer;
-  background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
+  padding: 22px 16px;
+  border-radius: 28px;
+  border: 0;
+  cursor: pointer;
   color:#000;
-  font-weight:900;
-  letter-spacing:.05em;
-  transition:.2s ease;
+  font-weight: 950;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+
+  background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
   box-shadow:
-    0 0 20px var(--neon-cyan),
-    0 0 40px var(--neon-pink),
-    0 0 60px rgba(255,79,216,.6);
+    0 0 22px rgba(34,230,255,0.75),
+    0 0 44px rgba(255,79,216,0.55),
+    0 16px 34px rgba(0,0,0,0.55);
+  position: relative;
+  overflow: hidden;
+  transition: transform .18s var(--ease-out), box-shadow .18s var(--ease-out), filter .18s var(--ease-out);
+}
+
+/* moving shine */
+.draw-btn::before{
+  content:"";
+  position:absolute;
+  inset:-60% -30%;
+  background: linear-gradient(120deg,
+    transparent 35%,
+    rgba(255,255,255,0.65) 48%,
+    transparent 62%
+  );
+  transform: translateX(-40%) rotate(10deg);
+  opacity:.35;
+  transition: transform .55s var(--ease-out), opacity .55s var(--ease-out);
 }
 
 .draw-btn:hover{
-  transform: scale(1.03);
+  transform: translateY(-2px) scale(1.02);
+  filter: saturate(1.12);
   box-shadow:
-    0 0 30px var(--neon-cyan),
-    0 0 60px var(--neon-pink),
-    0 0 100px var(--neon-pink);
+    0 0 30px rgba(34,230,255,0.85),
+    0 0 70px rgba(255,79,216,0.70),
+    0 22px 44px rgba(0,0,0,0.60);
+}
+.draw-btn:hover::before{
+  transform: translateX(40%) rotate(10deg);
+  opacity:.55;
+}
+.draw-btn:active{
+  transform: translateY(1px) scale(0.995);
 }
 
-.draw-btn__top{
-  font-size:20px;
-  display:block;
-}
-
+.draw-btn__top{ font-size: 20px; display:block; }
 .draw-btn__bottom{
-  font-size:12px;
-  margin-top:6px;
-  opacity:.8;
+  font-size: 12px;
+  margin-top: 6px;
+  opacity: .85;
+  letter-spacing: .04em;
 }
 
 /* =========================
-   Buttons
+   Buttons (Pop)
    ========================= */
-
 .btn{
-  padding:12px 14px;
-  border-radius:16px;
-  border:1px solid var(--stroke);
-  background: var(--glass);
+  padding: 12px 14px;
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,0.14);
+  background: rgba(0,0,0,0.35);
   color:#fff;
   cursor:pointer;
-  transition:.15s;
+  transition: transform .15s var(--ease-out), box-shadow .15s var(--ease-out), filter .15s var(--ease-out);
+  box-shadow: 0 10px 24px rgba(0,0,0,0.45);
 }
 
 .btn:hover{
-  box-shadow: 0 0 16px var(--neon-pink);
+  transform: translateY(-1px);
+  filter: saturate(1.15);
+  box-shadow:
+    0 0 18px rgba(255,79,216,0.35),
+    0 12px 28px rgba(0,0,0,0.55);
 }
+.btn:active{ transform: translateY(1px); }
 
 .btn-primary{
   background: linear-gradient(135deg, var(--neon-pink), var(--neon-purple));
-  color:#fff;
-  border:none;
+  border: 0;
   box-shadow:
-    0 0 20px var(--neon-pink),
-    0 0 40px var(--neon-purple);
+    0 0 18px rgba(255,79,216,0.70),
+    0 0 34px rgba(123,92,255,0.55),
+    0 14px 30px rgba(0,0,0,0.55);
 }
 
 .btn-full{ width:100%; }
@@ -183,69 +329,91 @@ body{
 /* =========================
    Reveal
    ========================= */
-
 .badge{
   position:absolute;
   top:14px;
   right:14px;
-  padding:6px 10px;
-  border-radius:999px;
-  font-size:12px;
-  background:rgba(0,0,0,.6);
-  border:1px solid var(--stroke);
+  padding: 7px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  background: rgba(0,0,0,.55);
+  border: 1px solid rgba(255,255,255,0.14);
+  box-shadow:
+    0 0 14px rgba(34,230,255,0.10),
+    0 0 16px rgba(255,79,216,0.08);
 }
 
 .card-icon{
-  width:140px;
-  height:140px;
-  margin:10px auto;
+  width: 150px;
+  height: 150px;
+  margin: 12px auto;
   display:grid;
   place-items:center;
-  border-radius:28px;
-  background:#000;
-  border:2px solid var(--neon-cyan);
+  border-radius: 32px;
+  background: #000;
+  border: 2px solid rgba(34,230,255,0.85);
   box-shadow:
-    0 0 20px var(--neon-cyan),
-    0 0 40px var(--neon-pink);
+    0 0 24px rgba(34,230,255,0.85),
+    0 0 52px rgba(255,79,216,0.55),
+    0 18px 40px rgba(0,0,0,0.60);
+  position: relative;
+  overflow: hidden;
+}
+
+/* inner glow ring */
+.card-icon::before{
+  content:"";
+  position:absolute;
+  inset: 10px;
+  border-radius: 26px;
+  border: 1px solid rgba(255,255,255,0.10);
+  box-shadow:
+    0 0 14px rgba(34,230,255,0.20) inset,
+    0 0 18px rgba(255,79,216,0.12) inset;
+  pointer-events:none;
 }
 
 .card-icon img{
-  width:75%;
+  width: 76%;
   filter:
-    drop-shadow(0 0 10px var(--neon-cyan))
-    drop-shadow(0 0 20px var(--neon-pink));
+    drop-shadow(0 0 10px rgba(34,230,255,0.95))
+    drop-shadow(0 0 22px rgba(255,79,216,0.75));
 }
 
 #card-title{
-  font-size:24px;
+  font-size: 24px;
   text-align:center;
-  margin:0;
+  margin: 0;
+  letter-spacing: .05em;
   text-shadow:
-    0 0 10px var(--neon-cyan),
-    0 0 20px var(--neon-pink);
+    0 0 10px rgba(34,230,255,0.90),
+    0 0 20px rgba(255,79,216,0.70),
+    0 0 34px rgba(123,92,255,0.55);
 }
 
 #card-subtitle{
   text-align:center;
-  font-size:13px;
-  opacity:.7;
+  font-size: 13px;
+  opacity:.78;
   margin-top:6px;
+  letter-spacing: .02em;
 }
 
 .rule-box{
-  margin-top:14px;
-  padding:16px;
-  border-radius:18px;
-  background:rgba(0,0,0,.5);
-  border:1px solid var(--stroke);
-  font-size:15px;
-  line-height:1.8;
+  margin-top: 14px;
+  padding: 16px;
+  border-radius: 18px;
+  background: rgba(0,0,0,0.55);
+  border: 1px solid rgba(255,255,255,0.14);
+  font-size: 15px;
+  line-height: 1.8;
   box-shadow:
-    0 0 15px rgba(34,230,255,.15);
+    0 0 18px rgba(34,230,255,0.14),
+    0 0 24px rgba(255,79,216,0.08);
 }
 
 .actions{
-  margin-top:16px;
+  margin-top: 16px;
   display:flex;
   gap:10px;
   flex-wrap:wrap;
@@ -254,17 +422,31 @@ body{
 /* =========================
    Finished
    ========================= */
-
 .card-finished h2{
   text-align:center;
-  font-size:24px;
+  font-size: 24px;
+  letter-spacing: .05em;
   text-shadow:
-    0 0 10px var(--neon-pink),
-    0 0 20px var(--neon-cyan);
+    0 0 10px rgba(255,79,216,0.85),
+    0 0 20px rgba(34,230,255,0.70);
 }
 
 .big{
-  font-size:26px;
-  font-weight:900;
+  font-size: 26px;
+  font-weight: 950;
   text-align:center;
+  letter-spacing: .06em;
+}
+
+/* =========================
+   Tiny Pop Animations (optional but fun)
+   ========================= */
+@media (prefers-reduced-motion: no-preference){
+  .card{
+    animation: floaty 5.5s ease-in-out infinite;
+  }
+  @keyframes floaty{
+    0%,100%{ transform: translateY(0); }
+    50%{ transform: translateY(-3px); }
+  }
 }

@@ -1,411 +1,286 @@
-:root{
-  --bg: #090a18;
-  --card: rgba(255,255,255,.08);
-  --card2: rgba(255,255,255,.05);
-  --text: #ffffff;
-  --muted: rgba(255,255,255,.82);
-  --muted2: rgba(255,255,255,.62);
-  --border: rgba(255,255,255,.18);
+"use strict";
 
-  /* party palette */
-  --accent: #ff4fd8;   /* pink */
-  --accent2: #22e6ff;  /* cyan */
-  --accent3: #ffd54a;  /* yellow */
-  --accent4: #7c3aed;  /* purple */
-  --danger: #ff3b30;
+/**
+ * 飲みゲー（カード枚数はCARDS.lengthで自動）
+ * 目的：その場で即決・盛り上がるカード中心
+ *
+ * ✅ 前提：
+ * - index.html に #card-icon がある（推奨：<div id="card-icon" class="card-icon"></div>）
+ * - PNGを ./icons/ フォルダに置く（例：./icons/bear.png）
+ */
 
-  --shadow: 0 18px 45px rgba(0,0,0,.45);
-  --radius: 18px;
-  --tap: 56px;
+// -------------------- Cards --------------------
+const CARDS = [
+  { title: "白熊", category: "服装", rule: "白い服や小物を身に着けている人が飲む。" },
+  { title: "ずっとも", category: "席順", rule: "引いた人の両隣が飲む。" },
+  { title: "誕生日ボーイ&ガール", category: "プロフィール", rule: "誕生日が近い人（今月 or 来月）が飲む。該当がいなければ引いた人が飲む。" },
 
-  /* neon glow strength */
-  --glow-pink: 0 0 18px rgba(255,79,216,.35), 0 0 45px rgba(255,79,216,.18);
-  --glow-cyan: 0 0 18px rgba(34,230,255,.30), 0 0 45px rgba(34,230,255,.16);
-}
+  { title: "水チェイサー", category: "休憩", rule: "全員、水を一口飲む（休憩カード）。" },
+  { title: "水チェイサー", category: "休憩", rule: "全員、水を一口飲む（休憩カード）。" },
 
-*{ box-sizing:border-box; }
-html,body{ height:100%; }
+  { title: "じゃんけん王", category: "即決", rule: "全員でじゃんけん。負けた人が飲む（あいこはやり直し）。" },
+  { title: "共通点探し", category: "即決", rule: "引いた人が“全員の共通点”を1つ即答。10秒で出なければ全員1口。" },
+  { title: "指差し", category: "即決", rule: "せーので指差し。一番指さされた人が飲む（同票なら同票の複数人が飲む）。" },
+  { title: "独裁", category: "全体", rule: "引いた人以外、全員が飲む。" },
 
-body{
-  margin:0;
-  font-family: ui-sans-serif, system-ui, -apple-system, "Hiragino Sans", "Noto Sans JP", "Segoe UI", Roboto, Arial, sans-serif;
+  { title: "右隣", category: "席順", rule: "引いた人の右隣が飲む。" },
+  { title: "左隣", category: "席順", rule: "引いた人の左隣が飲む。" },
+  { title: "向かい", category: "席順", rule: "引いた人の向かい（正面）が飲む。向かいが不明なら“目が合った人”が飲む。" },
+  { title: "偶数席", category: "席順", rule: "座席を1番から順に数えて“偶数席”の人が飲む（数え方は引いた人が決める）。" },
+  { title: "奇数席", category: "席順", rule: "座席を1番から順に数えて“奇数席”の人が飲む（数え方は引いた人が決める）。" },
 
-  /* Party background: neon + confetti glow dots */
-  background:
-    radial-gradient(12px 12px at 12% 18%, rgba(255,213,74,.75), transparent 60%),
-    radial-gradient(10px 10px at 70% 10%, rgba(34,230,255,.7), transparent 60%),
-    radial-gradient(14px 14px at 92% 22%, rgba(255,79,216,.75), transparent 60%),
-    radial-gradient(10px 10px at 22% 78%, rgba(124,58,237,.7), transparent 60%),
-    radial-gradient(14px 14px at 84% 82%, rgba(34,230,255,.6), transparent 60%),
+  { title: "最年長", category: "プロフィール", rule: "この場で一番年上の人が飲む。" },
+  { title: "最年少", category: "プロフィール", rule: "この場で一番年下の人が飲む。" },
 
-    radial-gradient(900px 500px at 10% -10%, rgba(255,79,216,.30), transparent 55%),
-    radial-gradient(900px 600px at 110% 20%, rgba(34,230,255,.22), transparent 55%),
-    radial-gradient(900px 600px at 50% 120%, rgba(255,213,74,.18), transparent 55%),
-    linear-gradient(180deg, #050616, var(--bg));
+  { title: "メデゥーサ", category: "心理戦", rule: "引いた人と最初に目が合った人が飲む。10秒誰とも目が合わなければ引いた人が飲む。" },
+  { title: "遅刻", category: "当日ネタ", rule: "今日の飲み会に一番遅刻した人が飲む。" },
+  { title: "人気者", category: "即決", rule: "全員スマホを出す。一番最初にLINE/DMの通知が来た人が飲む（来なければ引いた人が飲む）。" },
+  { title: "キス", category: "当日ネタ", rule: "一番最近キスした人が飲む（言いたくない人は1口で回避OK）。" },
+  { title: "ラッパー", category: "チャレンジ", rule: "引いた人が早口言葉を決める。順番に言い、噛んだ人が飲む。" },
 
-  color: var(--text);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  { title: "乾杯", category: "全体", rule: "全員飲む（1口でOK）。" },
+  { title: "究極の選択", category: "選択", rule: "2杯飲むか、このメンバーの誰にも言ったことのない秘密を1つ言う。" },
+  { title: "倍々ファイト", category: "罰ゲーム", rule: "引いた人が2杯飲む。" },
+  { title: "お残しチェック", category: "量チェック", rule: "今いちばんグラスにお酒が残ってる人が飲み干す（無理なら2口＋水）。" },
 
-  position: relative;
-  overflow-x: hidden;
-}
+  { title: "ロック画面", category: "即決", rule: "一番○○なロック画面の人が飲む。（○○は引いた人が決める：人が多く映ってる／幸せそう／盛れてる等）" },
 
-/* club texture: subtle grid + noise */
-body::before{
-  content:"";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  background:
-    linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px);
-  background-size: 48px 48px, 48px 48px;
-  opacity: .12;
-  mix-blend-mode: overlay;
-}
-body::after{
-  content:"";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='.28'/%3E%3C/svg%3E");
-  opacity: .08;
-  mix-blend-mode: overlay;
-}
+  { title: "電池残量（少ない）", category: "即決", rule: "スマホの電池残量が一番少ない人が飲む。" },
+  { title: "電池残量（多い）", category: "即決", rule: "スマホの電池残量が一番多い人が飲む。" },
 
-.app{
-  max-width: 520px;
-  margin: 0 auto;
-  padding: 14px 14px 24px;
-  min-height: 100%;
-  display:flex;
-  flex-direction: column;
-  gap: 14px;
-}
+  { title: "一斉に乾杯", category: "全体", rule: "全員“グラスを上げる”。上げるのが一番遅かった人が飲む。" },
+  { title: "連想ゲーム", category: "チャレンジ", rule: "引いた人がお題を1つ。時計回りで1つずつ連想を言う。詰まった人が飲む（3秒以内）。" },
+  { title: "セーフティ", category: "休憩", rule: "このカードはセーフ。飲まなくてOK。代わりに水を一口（任意）。" },
 
-.topbar{
-  display:flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding-top: 6px;
-}
+  { title: "バリア", category: "効果", rule: "引いた人は『次に自分が飲む指示』を1回だけ無効化できる（いつ使ってもOK）。" },
+  { title: "バリア", category: "効果", rule: "引いた人は『次に自分が飲む指示』を1回だけ無効化できる（いつ使ってもOK）。" },
 
-.title h1{
-  margin:0;
-  font-size: 24px;
-  letter-spacing: .02em;
-  text-shadow: var(--glow-pink);
-}
-.title .sub{
-  margin: 6px 0 0;
-  color: var(--muted2);
-  font-size: 13px;
-}
+  { title: "ガードマン", category: "効果", rule: "引いた人は『自分以外の1人』を指名して守れる。指名された人が次に飲む指示を受けたら、その1回だけ無効化。" },
+  { title: "ガードマン", category: "効果", rule: "引いた人は『自分以外の1人』を指名して守れる。指名された人が次に飲む指示を受けたら、その1回だけ無効化。" },
 
-.screen{ display:none; flex-direction: column; gap: 14px; }
-.screen-active{ display:flex; }
+  { title: "なにした", category: "即決", rule: "直近一週間で○○した人は飲む（○○は引いた人が決める）。" },
 
-/* Card: glass + highlight */
-.card{
-  position: relative;
-  background: linear-gradient(180deg, var(--card), var(--card2));
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  padding: 16px;
-  overflow: hidden;
-  backdrop-filter: blur(10px);
+  { title: "二択ジャッジ", category: "即決", rule: "引いた人が二択を出す（例：犬派/猫派）。引いた人が回答を考え、他の人は予想。外れた人は飲む。" },
+  { title: "多数決", category: "即決", rule: "引いた人が質問を1つ。少数派が飲む。（例：1か月後に旅行するなら沖縄or北海道）" },
+  { title: "ワンワード", category: "即決", rule: "引いた人が“お題”を1つ。全員漢字1語で答える。被った人が飲む。（例：夏といえば？→海）" },
+  { title: "3・2・1", category: "即決", rule: "全員でせーので1〜3の数字を指で出す。一番少数派の数字の人が飲む（同数なら同数）。" },
+];
 
-  /* neon rim base */
-  outline: 1px solid rgba(255,255,255,.08);
-}
+// -------------------- Icons (PNG) --------------------
+// ✅ パスは「./icons/」(小文字) に統一
+const ICONS = {
+  "白熊": "./icons/bear.png",
+  "ずっとも": "./icons/seat_heart.png",
+  "誕生日ボーイ&ガール": "./icons/cake.png",
+  "水チェイサー": "./icons/water.png",
+  "じゃんけん王": "./icons/crown_hand.png",
+  "共通点探し": "./icons/venn.png",
+  "指差し": "./icons/point.png",
+  "独裁": "./icons/spotlight.png",
+  "右隣": "./icons/arrow_right.png",
+  "左隣": "./icons/arrow_left.png",
+  "向かい": "./icons/facing.png",
+  "偶数席": "./icons/arrow_right.png",
+  "奇数席": "./icons/arrow_left.png",
+  "最年長": "./icons/crown.png",
+  "最年少": "./icons/baby.png",
+  "メデゥーサ": "./icons/medusa_eye.png",
+  "遅刻": "./icons/spotlight.png",
+  "人気者": "./icons/phone_heart.png",
+  "キス": "./icons/seat_heart.png",
+  "ラッパー": "./icons/mic.png",
+  "乾杯": "./icons/clink.png",
+  "究極の選択": "./icons/choice.png",
+  "倍々ファイト": "./icons/crown_hand.png",
+  "お残しチェック": "./icons/glass_level.png",
+  "ロック画面": "./icons/lockscreen.png",
+  "電池残量（少ない）": "./icons/battery_low.png",
+  "電池残量（多い）": "./icons/battery_full.png",
+  "一斉に乾杯": "./icons/clink.png",
+  "連想ゲーム": "./icons/venn.png",
+  "セーフティ": "./icons/check.png",
+  "バリア": "./icons/shield.png",
+  "ガードマン": "./icons/guard.png",
+  "なにした": "./icons/point.png",
+  "二択ジャッジ": "./icons/choice.png",
+  "多数決": "./icons/venn.png",
+  "ワンワード": "./icons/phone_heart.png",
+  "3・2・1": "./icons/point.png",
 
-/* neon rim */
-.card::after{
-  content:"";
-  position:absolute;
-  inset: -2px;
-  border-radius: calc(var(--radius) + 2px);
-  pointer-events:none;
-  background:
-    radial-gradient(700px 180px at 20% 10%, rgba(255,79,216,.22), transparent 60%),
-    radial-gradient(700px 180px at 90% 10%, rgba(34,230,255,.18), transparent 60%);
-  filter: blur(14px);
-  opacity: .7;
-}
+  // フォールバック
+  default: "./icons/target.png",
+};
 
-/* subtle glossy shine */
-.card::before{
-  content:"";
-  position:absolute;
-  inset:-40% -20% auto -20%;
-  height: 140px;
-  background: linear-gradient(90deg,
-    transparent,
-    rgba(255,255,255,.18),
-    transparent
-  );
-  transform: rotate(-8deg);
-  pointer-events:none;
-  opacity: .8;
-}
+// -------------------- DOM --------------------
+const el = (id) => document.getElementById(id);
 
-/* mini card headings */
-.card-mini h2{
-  margin: 0 0 10px;
-  font-size: 14px;
-  color: var(--muted);
-  font-weight: 900;
-  letter-spacing: .03em;
-}
-.card-mini ol{
-  margin: 0;
-  padding-left: 18px;
-  color: var(--muted);
-  line-height: 1.65;
-  font-size: 14px;
-}
+// 画面要素（存在しなくても落ちない）
+const screens = {
+  deck: el("screen-deck"),
+  reveal: el("screen-reveal"),
+  finished: el("screen-finished"),
+};
 
-.pill{
-  display:inline-flex;
-  align-items:center;
-  gap: 8px;
-  padding: 8px 12px;
-  border-radius: 999px;
-  border: 1px solid var(--border);
-  background: rgba(255,255,255,.06);
-  font-size: 13px;
-  color: var(--muted);
-}
-.pill.subtle{ color: var(--muted2); }
-
-.deck-info{
-  display:flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  margin-bottom: 14px;
-}
-
-/* draw button */
-.draw-btn{
-  width:100%;
-  border: 0;
-  border-radius: 22px;
-  min-height: 140px;
-  padding: 14px 16px;
-
-  background:
-    radial-gradient(900px 260px at 20% 20%, rgba(255,213,74,.55), transparent 55%),
-    radial-gradient(900px 260px at 90% 10%, rgba(34,230,255,.45), transparent 60%),
-    linear-gradient(135deg, rgba(255,79,216,.75), rgba(124,58,237,.55) 40%, rgba(34,230,255,.55));
-
-  color: var(--text);
-  box-shadow:
-    var(--glow-pink),
-    var(--glow-cyan),
-    0 18px 55px rgba(0,0,0,.35);
-  border: 1px solid rgba(255,255,255,.22);
-  cursor:pointer;
-  touch-action: manipulation;
-  transition: transform .08s ease, filter .15s ease;
-}
-.draw-btn:hover{ filter: brightness(1.03); }
-.draw-btn:active{ transform: scale(.99); filter: brightness(.98); }
-
-.draw-btn__top{
-  display:block;
-  font-size: 22px;
-  font-weight: 1000;
-  letter-spacing: .04em;
-  text-shadow: 0 10px 30px rgba(0,0,0,.35);
-}
-.draw-btn__bottom{
-  display:block;
-  margin-top: 8px;
-  font-size: 13px;
-  color: rgba(255,255,255,.85);
-}
-
-.hint{
-  margin-top: 12px;
-  padding-top: 12px;
-  border-top: 1px dashed rgba(255,255,255,.18);
-  color: var(--muted2);
-  font-size: 12px;
-}
-
-.badge{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  padding: 8px 12px;
-  border-radius: 999px;
-  border: 1px solid rgba(255,255,255,.22);
-  background:
-    linear-gradient(135deg, rgba(255,79,216,.18), rgba(34,230,255,.12));
-  color: var(--muted);
-  font-weight: 900;
-  width: fit-content;
-  box-shadow: 0 0 18px rgba(34,230,255,.10);
-}
-
-.reveal-title{
-  margin-top: 10px;
-}
-.reveal-title h2{
-  margin: 10px 0 6px;
-  font-size: 28px;
-  letter-spacing: .02em;
-  text-shadow: 0 0 18px rgba(34,230,255,.12);
-}
-.reveal-title .subtle{
-  margin:0;
-  color: var(--muted2);
-  font-size: 13px;
-}
-
-.rule-box{
-  margin-top: 14px;
-  padding: 14px 14px;
-  border-radius: 14px;
-  border: 1px solid rgba(255,255,255,.18);
-  background:
-    linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.05));
-}
-.rule-box p{
-  margin:0;
-  font-size: 16px;
-  line-height: 1.7;
-  color: rgba(255,255,255,.92);
-}
-
-/* actions: "next" full width / back hidden */
-.actions{
-  margin-top: 16px;
-  display:flex;
-  gap: 10px;
-}
-
-/* ✅ 戻るを完全に消す（HTMLに残ってても消える） */
-#btn-back{ display:none !important; }
-
-/* ✅ 次のカードへをフル幅化 */
-#btn-next{ flex: 1 1 100%; width: 100%; }
-
-.btn{
-  min-height: var(--tap);
-  border-radius: 14px;
-  border: 1px solid rgba(255,255,255,.20);
-  padding: 12px 14px;
-  font-size: 15px;
-  font-weight: 900;
-  cursor:pointer;
-  touch-action: manipulation;
-  flex: 1;
-  transition: transform .08s ease, filter .15s ease;
-}
-.btn:hover{ filter: brightness(1.03); }
-.btn:active{ transform: scale(.99); filter: brightness(.98); }
-
-.btn-primary{
-  border-color: rgba(255,255,255,.22);
-  background:
-    radial-gradient(500px 140px at 20% 20%, rgba(255,213,74,.40), transparent 55%),
-    linear-gradient(135deg, rgba(255,79,216,.80), rgba(124,58,237,.55) 45%, rgba(34,230,255,.60));
-  box-shadow:
-    var(--glow-pink),
-    var(--glow-cyan);
-  color: var(--text);
-}
-
-/* ghost: glass */
-.btn-ghost{
-  background: rgba(255,255,255,.06);
-  color: var(--text);
-}
-
-.big{
-  font-size: 22px;
-  font-weight: 1000;
-  margin: 8px 0 0;
-}
-.subtle{ color: var(--muted2); }
-
-.footer{
-  margin-top: auto;
-  padding: 8px 2px 0;
-  text-align:center;
-  font-size: 12px;
-  color: var(--muted2);
-}
-
-/* iPhone notch safe area */
-@supports (padding: max(0px)) {
-  .app{
-    padding-left: max(14px, env(safe-area-inset-left));
-    padding-right: max(14px, env(safe-area-inset-right));
-    padding-top: max(14px, env(safe-area-inset-top));
-    padding-bottom: max(24px, env(safe-area-inset-bottom));
+// -------------------- Utils --------------------
+function shuffle(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
   }
+  return array;
 }
 
-/* accessibility: reduce motion */
-@media (prefers-reduced-motion: reduce){
-  *{ transition: none !important; }
+function setScreen(screenId) {
+  const list = [screens.deck, screens.reveal, screens.finished].filter(Boolean);
+
+  list.forEach((node) => {
+    node.classList.remove("screen-active");
+    node.setAttribute("aria-hidden", "true");
+    try {
+      node.inert = true;
+    } catch (_) {}
+  });
+
+  const target = el(screenId);
+  if (!target) return;
+
+  target.classList.add("screen-active");
+  target.setAttribute("aria-hidden", "false");
+  try {
+    target.inert = false;
+  } catch (_) {}
 }
 
-/* ------------------------------
-   Icon Area (PNG / SVG 両対応)
------------------------------- */
-.card-icon{
-  width: 120px;
-  height: 120px;
-  margin: 10px auto 6px;
-  display: grid;
-  place-items: center;
-  filter:
-    drop-shadow(0 0 16px rgba(34,230,255,.25))
-    drop-shadow(0 0 30px rgba(255,79,216,.18));
+// -------------------- State --------------------
+let deck = [];
+let drawnCount = 0;
+
+// -------------------- UI --------------------
+function setTotals() {
+  const total = String(CARDS.length);
+  ["total", "total2", "total3", "total4", "total5"].forEach((id) => {
+    const node = el(id);
+    if (node) node.textContent = total;
+  });
 }
 
-/* PNG */
-.card-icon img{
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  display: block;
+function updateCounters() {
+  const remain = String(deck.length);
+  const drawn = String(drawnCount);
+
+  const r1 = el("remain");
+  const r2 = el("remain2");
+  const d = el("drawn");
+
+  if (r1) r1.textContent = remain;
+  if (r2) r2.textContent = remain;
+  if (d) d.textContent = drawn;
 }
 
-/* SVG（将来のために残す） */
-.card-icon svg{
-  width: 100%;
-  height: 100%;
-  display: block;
-}
-.card-icon svg *{
-  vector-effect: non-scaling-stroke;
-  stroke: rgba(34,230,255,.95);
-  stroke-width: 3;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  fill: none;
+/**
+ * PNGアイコン描画
+ * - 404のときは default にフォールバック
+ * - #card-icon が id だけでも最低限レイアウト崩れないように補助
+ */
+function renderIconForCard(card) {
+  const box = el("card-icon");
+  if (!box) return;
+
+  const wanted = ICONS[card.title] || ICONS.default || "";
+
+  // クリア
+  box.textContent = "";
+
+  if (!wanted) return;
+
+  // もしHTMLに class="card-icon" が無くても見栄え最低限担保
+  //（CSSが当たらない時の保険）
+  box.style.width ||= "120px";
+  box.style.height ||= "120px";
+  box.style.margin ||= "10px auto 6px";
+  box.style.display ||= "grid";
+  box.style.placeItems ||= "center";
+
+  const img = document.createElement("img");
+  img.alt = "";
+  img.decoding = "async";
+  img.loading = "eager";
+
+  // フォールバック付きで設定
+  const setSrc = (src) => {
+    img.src = src;
+  };
+
+  img.onerror = () => {
+    const def = ICONS.default;
+    if (!def) return;
+    // 既にdefaultなら無限ループ防止
+    if (img.src && def && img.src.endsWith(def.replace("./", ""))) return;
+    setSrc(def);
+  };
+
+  setSrc(wanted);
+  box.appendChild(img);
 }
 
-/* アクセント（任意） */
-.card-icon .pink { stroke: rgba(255,79,216,.95); }
-.card-icon .yellow { stroke: rgba(255,213,74,.95); }
+function newGame() {
+  deck = shuffle(CARDS.map((c) => ({ ...c })));
+  drawnCount = 0;
 
-/* ------------------------------
-   Layout helpers used in HTML
------------------------------- */
-.actions-one{ display: block; }
-.btn-full{ width: 100%; }
-
-/* ------------------------------
-   Optional: inactive screen safety
------------------------------- */
-.screen[aria-hidden="true"]{
-  pointer-events: none;
+  setTotals();
+  updateCounters();
+  setScreen("screen-deck");
 }
+
+function showCard(card) {
+  const idx = el("card-index");
+  const title = el("card-title");
+  const subtitle = el("card-subtitle");
+  const rule = el("card-rule");
+
+  if (idx) idx.textContent = String(drawnCount);
+  if (title) title.textContent = card.title;
+  if (subtitle) subtitle.textContent = card.category;
+  if (rule) rule.textContent = card.rule;
+
+  renderIconForCard(card);
+  updateCounters();
+  setScreen("screen-reveal");
+}
+
+function drawCard() {
+  if (deck.length === 0) {
+    setScreen("screen-finished");
+    return;
+  }
+
+  const card = deck.pop();
+  drawnCount += 1;
+  showCard(card);
+}
+
+// -------------------- Events --------------------
+function bindEvents() {
+  el("btn-draw")?.addEventListener("click", drawCard);
+  el("btn-next")?.addEventListener("click", drawCard);
+
+  el("btn-reset")?.addEventListener("click", () => {
+    const ok = confirm("最初からやり直しますか？（カードはシャッフルされます）");
+    if (ok) newGame();
+  });
+
+  el("btn-restart")?.addEventListener("click", newGame);
+  el("btn-finish-back")?.addEventListener("click", () => setScreen("screen-deck"));
+}
+
+// -------------------- Boot --------------------
+(function boot() {
+  try {
+    console.log(`飲みゲー：カード枚数 = ${CARDS.length}枚`);
+    bindEvents();
+    newGame();
+  } catch (e) {
+    console.error("script.js 起動エラー:", e);
+    alert("スクリプトでエラーが出ています。PCでF12→Consoleを確認してください。");
+  }
+})();

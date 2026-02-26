@@ -1,311 +1,270 @@
 /* =========================
-   飲みゲー style.css
+   NEON POP DRINK GAME
    ========================= */
 
-/* ---- Reset / Base ---- */
 * { box-sizing: border-box; }
 html, body { height: 100%; }
-body {
+
+body{
   margin: 0;
-  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Yu Gothic", "Meiryo", sans-serif;
-  background: radial-gradient(1200px 700px at 20% 0%, #162042 0%, #0b0f1a 55%, #070a12 100%);
-  color: #e9ecf8;
+  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+  background: #000000;
+  color: #ffffff;
   -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
 }
 
-a { color: inherit; }
-
+/* =========================
+   Neon Variables
+   ========================= */
 :root{
-  --bg: #0b0f1a;
-  --card: rgba(255,255,255,.06);
-  --card2: rgba(255,255,255,.08);
-  --stroke: rgba(255,255,255,.12);
-  --stroke2: rgba(255,255,255,.18);
-
-  --text: #e9ecf8;
-  --muted: rgba(233,236,248,.72);
-
-  --primary: #6c7bff;
-  --primary2: #7f5bff;
-  --danger: #ff4d6d;
-
-  --shadow: 0 18px 60px rgba(0,0,0,.45);
-  --shadow2: 0 10px 30px rgba(0,0,0,.35);
-
-  --r: 18px;
+  --neon-cyan: #22E6FF;
+  --neon-pink: #FF4FD8;
+  --neon-purple: #7B5CFF;
+  --glass: rgba(255,255,255,0.05);
+  --stroke: rgba(255,255,255,0.12);
 }
 
-.subtle { color: var(--muted); }
-.big { font-size: 24px; font-weight: 800; letter-spacing: .02em; margin: 8px 0 0; }
+/* =========================
+   Layout
+   ========================= */
 
-/* ---- Layout ---- */
 .app{
-  min-height: 100%;
-  display: grid;
-  grid-template-rows: auto 1fr auto;
-  padding: 16px;
-  gap: 14px;
   max-width: 820px;
   margin: 0 auto;
+  padding: 20px;
+  display: grid;
+  gap: 18px;
 }
 
 .topbar{
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  padding: 14px 14px;
-  border-radius: var(--r);
-  background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.05));
+  align-items: center;
+  padding: 16px;
+  border-radius: 18px;
+  background: var(--glass);
   border: 1px solid var(--stroke);
-  box-shadow: var(--shadow2);
+  backdrop-filter: blur(12px);
 }
 
 .title h1{
-  font-size: 20px;
-  line-height: 1.2;
   margin: 0;
-  letter-spacing: .01em;
+  font-size: 22px;
+  letter-spacing: .05em;
+  text-shadow:
+    0 0 6px var(--neon-cyan),
+    0 0 14px var(--neon-pink);
 }
+
 .title .sub{
-  margin: 6px 0 0;
   font-size: 13px;
-  color: var(--muted);
+  opacity: .7;
+  margin-top: 6px;
 }
 
 .footer{
   text-align: center;
-  padding: 8px 0 2px;
+  opacity: .5;
+  font-size: 12px;
 }
 
-/* ---- Screens ---- */
-.screens{
-  display: grid;
-  gap: 14px;
-  align-content: start;
-}
+/* =========================
+   Screens
+   ========================= */
 
-.screen{
-  display: none;
-  gap: 14px;
-}
-.screen.screen-active{
-  display: grid;
-}
+.screen{ display:none; }
+.screen-active{ display:grid; gap:18px; }
 
-/* ---- Cards ---- */
+/* =========================
+   Cards (Glass Neon)
+   ========================= */
+
 .card{
-  border-radius: calc(var(--r) + 2px);
-  background: linear-gradient(180deg, var(--card2), var(--card));
+  padding: 20px;
+  border-radius: 24px;
+  background: var(--glass);
   border: 1px solid var(--stroke);
-  box-shadow: var(--shadow);
-  padding: 16px;
+  backdrop-filter: blur(18px);
+  position: relative;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.04) inset,
+    0 0 30px rgba(34,230,255,0.15),
+    0 0 60px rgba(255,79,216,0.1);
 }
 
-.card-mini h2{
-  margin: 0 0 10px;
-  font-size: 16px;
-  letter-spacing: .02em;
-}
-.card-mini ol{
-  margin: 0;
-  padding-left: 18px;
-  color: var(--muted);
-  line-height: 1.75;
-  font-size: 14px;
-}
+/* =========================
+   Pills
+   ========================= */
 
-.card-deck .hint{
-  margin: 12px 0 0;
-  font-size: 12.5px;
-  color: var(--muted);
-}
-
-/* ---- Pills ---- */
-.deck-info{
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  margin-bottom: 12px;
-}
 .pill{
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 7px 10px;
+  padding: 8px 12px;
   border-radius: 999px;
-  background: rgba(255,255,255,.07);
+  background: rgba(255,255,255,0.06);
   border: 1px solid var(--stroke);
-  font-size: 12.5px;
-}
-.pill.subtle{
-  background: rgba(255,255,255,.05);
+  font-size: 13px;
 }
 
-/* ---- Buttons ---- */
+.deck-info{
+  display:flex;
+  gap:10px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+
+/* =========================
+   Draw Button (Main Neon)
+   ========================= */
+
+.draw-btn{
+  width:100%;
+  padding:22px 16px;
+  border-radius: 26px;
+  border: none;
+  cursor:pointer;
+  background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
+  color:#000;
+  font-weight:900;
+  letter-spacing:.05em;
+  transition:.2s ease;
+  box-shadow:
+    0 0 20px var(--neon-cyan),
+    0 0 40px var(--neon-pink),
+    0 0 60px rgba(255,79,216,.6);
+}
+
+.draw-btn:hover{
+  transform: scale(1.03);
+  box-shadow:
+    0 0 30px var(--neon-cyan),
+    0 0 60px var(--neon-pink),
+    0 0 100px var(--neon-pink);
+}
+
+.draw-btn__top{
+  font-size:20px;
+  display:block;
+}
+
+.draw-btn__bottom{
+  font-size:12px;
+  margin-top:6px;
+  opacity:.8;
+}
+
+/* =========================
+   Buttons
+   ========================= */
+
 .btn{
-  appearance: none;
-  border: 1px solid var(--stroke2);
-  background: rgba(255,255,255,.06);
-  color: var(--text);
-  padding: 10px 12px;
-  border-radius: 14px;
-  font-weight: 700;
-  letter-spacing: .01em;
-  cursor: pointer;
-  transition: transform .08s ease, background .15s ease, border-color .15s ease;
-}
-.btn:hover{
-  background: rgba(255,255,255,.09);
-  border-color: rgba(255,255,255,.25);
-}
-.btn:active{
-  transform: translateY(1px);
+  padding:12px 14px;
+  border-radius:16px;
+  border:1px solid var(--stroke);
+  background: var(--glass);
+  color:#fff;
+  cursor:pointer;
+  transition:.15s;
 }
 
-.btn-ghost{
-  background: transparent;
-  border-color: rgba(255,255,255,.18);
-}
-.btn-ghost:hover{
-  background: rgba(255,255,255,.06);
+.btn:hover{
+  box-shadow: 0 0 16px var(--neon-pink);
 }
 
 .btn-primary{
-  background: linear-gradient(135deg, var(--primary), var(--primary2));
-  border-color: rgba(255,255,255,.15);
-  box-shadow: 0 10px 30px rgba(108,123,255,.22);
-}
-.btn-primary:hover{
-  filter: brightness(1.05);
-}
-.btn-full{
-  width: 100%;
-}
-
-/* ---- Draw Button ---- */
-.draw-btn{
-  width: 100%;
-  border: 1px solid rgba(255,255,255,.16);
-  border-radius: 22px;
-  background: radial-gradient(140% 120% at 50% 0%, rgba(127,91,255,.45) 0%, rgba(108,123,255,.25) 40%, rgba(255,255,255,.06) 100%);
-  color: var(--text);
-  padding: 18px 14px;
-  cursor: pointer;
+  background: linear-gradient(135deg, var(--neon-pink), var(--neon-purple));
+  color:#fff;
+  border:none;
   box-shadow:
-    0 18px 60px rgba(0,0,0,.45),
-    0 0 0 1px rgba(255,255,255,.06) inset;
-  transition: transform .08s ease, filter .15s ease;
-  text-align: center;
-}
-.draw-btn:hover{ filter: brightness(1.06); }
-.draw-btn:active{ transform: translateY(1px); }
-
-.draw-btn__top{
-  display: block;
-  font-size: 18px;
-  font-weight: 900;
-  letter-spacing: .02em;
-}
-.draw-btn__bottom{
-  display: block;
-  margin-top: 6px;
-  font-size: 12.5px;
-  color: rgba(233,236,248,.78);
+    0 0 20px var(--neon-pink),
+    0 0 40px var(--neon-purple);
 }
 
-/* ---- Reveal ---- */
-.card-reveal{
-  position: relative;
-  padding-top: 18px;
-}
+.btn-full{ width:100%; }
+
+/* =========================
+   Reveal
+   ========================= */
 
 .badge{
-  position: absolute;
-  top: 14px;
-  right: 14px;
-  font-size: 12px;
-  padding: 6px 10px;
-  border-radius: 999px;
-  background: rgba(0,0,0,.28);
-  border: 1px solid rgba(255,255,255,.14);
-  color: rgba(233,236,248,.9);
-  backdrop-filter: blur(6px);
+  position:absolute;
+  top:14px;
+  right:14px;
+  padding:6px 10px;
+  border-radius:999px;
+  font-size:12px;
+  background:rgba(0,0,0,.6);
+  border:1px solid var(--stroke);
 }
 
 .card-icon{
-  width: 120px;
-  height: 120px;
-  margin: 10px auto 6px;
-  display: grid;
-  place-items: center;
-  border-radius: 26px;
-  background: rgba(255,255,255,.06);
-  border: 1px solid rgba(255,255,255,.12);
-  box-shadow: 0 14px 40px rgba(0,0,0,.35);
-}
-.card-icon img{
-  width: 78%;
-  height: 78%;
-  object-fit: contain;
-  filter: drop-shadow(0 10px 24px rgba(0,0,0,.45));
+  width:140px;
+  height:140px;
+  margin:10px auto;
+  display:grid;
+  place-items:center;
+  border-radius:28px;
+  background:#000;
+  border:2px solid var(--neon-cyan);
+  box-shadow:
+    0 0 20px var(--neon-cyan),
+    0 0 40px var(--neon-pink);
 }
 
-.reveal-title{
-  text-align: center;
-  margin-top: 8px;
+.card-icon img{
+  width:75%;
+  filter:
+    drop-shadow(0 0 10px var(--neon-cyan))
+    drop-shadow(0 0 20px var(--neon-pink));
 }
+
 #card-title{
-  margin: 0;
-  font-size: 22px;
-  font-weight: 950;
-  letter-spacing: .02em;
+  font-size:24px;
+  text-align:center;
+  margin:0;
+  text-shadow:
+    0 0 10px var(--neon-cyan),
+    0 0 20px var(--neon-pink);
 }
+
 #card-subtitle{
-  margin: 6px 0 0;
-  font-size: 13px;
-  color: rgba(233,236,248,.74);
+  text-align:center;
+  font-size:13px;
+  opacity:.7;
+  margin-top:6px;
 }
 
 .rule-box{
-  margin-top: 14px;
-  padding: 14px 14px;
-  border-radius: 16px;
-  background: rgba(0,0,0,.22);
-  border: 1px solid rgba(255,255,255,.12);
-}
-#card-rule{
-  margin: 0;
-  line-height: 1.8;
-  font-size: 15px;
-  color: rgba(233,236,248,.92);
+  margin-top:14px;
+  padding:16px;
+  border-radius:18px;
+  background:rgba(0,0,0,.5);
+  border:1px solid var(--stroke);
+  font-size:15px;
+  line-height:1.8;
+  box-shadow:
+    0 0 15px rgba(34,230,255,.15);
 }
 
 .actions{
-  display: flex;
-  gap: 10px;
-  margin-top: 14px;
-  flex-wrap: wrap;
-}
-.actions-one{
-  display: grid;
+  margin-top:16px;
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
 }
 
-/* ---- Finished ---- */
+/* =========================
+   Finished
+   ========================= */
+
 .card-finished h2{
-  margin: 0 0 6px;
-  font-size: 20px;
-  letter-spacing: .02em;
+  text-align:center;
+  font-size:24px;
+  text-shadow:
+    0 0 10px var(--neon-pink),
+    0 0 20px var(--neon-cyan);
 }
 
-/* ---- Responsive ---- */
-@media (min-width: 720px){
-  .screens{
-    grid-template-columns: 1fr;
-  }
-  .card{
-    padding: 18px;
-  }
-  .title h1{ font-size: 22px; }
+.big{
+  font-size:26px;
+  font-weight:900;
+  text-align:center;
 }

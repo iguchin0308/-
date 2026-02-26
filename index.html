@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>つぶれてもいいですか？｜飲みゲー</title>
+  <title>つぶれちゃってもいいですか、、？｜飲みゲー</title>
 
   <meta name="description" content="カードを引いて盛り上がる飲み会ゲーム。無理せず楽しく飲もう！" />
   <meta name="theme-color" content="#0b0f1a" />
@@ -83,8 +83,9 @@
             <span id="card-index">1</span> / <span id="total3">--</span>
           </div>
 
-          <!-- アイコン置き場（後で差し替え） -->
-          <div class="card-icon" id="card-icon" aria-hidden="true"></div>
+          <!-- ✅ アイコン置き場（PNG表示） -->
+          <!-- aria-hidden は付けない（画像を隠さない） -->
+          <div id="card-icon" class="card-icon" aria-label="カードのアイコン"></div>
 
           <div class="reveal-title">
             <h2 id="card-title">カード名</h2>
@@ -138,7 +139,8 @@
     </footer>
   </div>
 
-  <!-- キャッシュ破り（更新するたびに数字変える） -->
-  <script src="./script.js?v=102"></script>
+  <!-- ✅ defer：DOM構築後にscriptを実行（スタートできない事故防止） -->
+  <!-- キャッシュ破りは残す -->
+  <script defer src="./script.js?v=103"></script>
 </body>
 </html>

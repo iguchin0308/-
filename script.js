@@ -65,7 +65,82 @@ const CARDS = [
 
 // -------------------- Icons --------------------
 const ICONS = {
+  // 1. 白熊
   "白熊": "./icons/bear.png",
+
+  // 2. ずっとも
+  "ずっとも": "./icons/seat_heart.png",
+
+  // 3. 誕生日（※CARDSのtitleに合わせる）
+  "誕生日ボーイ&ガール": "./icons/cake.png",
+
+  // 4. 水チェイサー（2枚あっても同じでOK）
+  "水チェイサー": "./icons/water.png",
+
+  // 5. じゃんけん王
+  "じゃんけん王": "./icons/crown_hand.png",
+
+  // 6. 共通点探し
+  "共通点探し": "./icons/venn.png",
+
+  // 7. 指差し
+  "指差し": "./icons/point.png",
+
+  // 8. 独裁
+  "独裁": "./icons/spotlight.png",
+
+  // 9. 右隣
+  "右隣": "./icons/arrow_right.png",
+
+  // 10. 左隣
+  "左隣": "./icons/arrow_left.png",
+
+  // 11. 向かい
+  "向かい": "./icons/facing.png",
+
+  // 12. 最年長
+  "最年長": "./icons/crown.png",
+
+  // 13. 最年少
+  "最年少": "./icons/baby.png",
+
+  // 14. メデゥーサ
+  "メデゥーサ": "./icons/medusa_eye.png",
+
+  // 15. 人気者
+  "人気者": "./icons/phone_heart.png",
+
+  // 16. ラッパー
+  "ラッパー": "./icons/mic.png",
+
+  // 17. 乾杯
+  "乾杯": "./icons/clink.png",
+
+  // 18. 究極の選択
+  "究極の選択": "./icons/choice.png",
+
+  // 19. お残しチェック
+  "お残しチェック": "./icons/glass_level.png",
+
+  // 20. ロック画面
+  "ロック画面": "./icons/lockscreen.png",
+
+  // 21. 電池残量（少ない）
+  "電池残量（少ない）": "./icons/battery_low.png",
+
+  // 22. 電池残量（多い）
+  "電池残量（多い）": "./icons/battery_full.png",
+
+  // 23. セーフティ
+  "セーフティ": "./icons/check.png",
+
+  // 24. バリア（2枚あっても同じでOK）
+  "バリア": "./icons/shield.png",
+
+  // 25. ガードマン（2枚あっても同じでOK）
+  "ガードマン": "./icons/guard.png",
+
+  // ここに無いカードは全部これになる
   default: "./icons/target.png",
 };
 

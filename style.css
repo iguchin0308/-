@@ -358,6 +358,9 @@ body::after{
     0 18px 40px rgba(0,0,0,0.60);
   position: relative;
   overflow: hidden;
+
+  /* ✅ iOS Safari: 角丸 + overflow + drop-shadow の初回描画バグ対策 */
+  -webkit-mask-image: -webkit-radial-gradient(white, black);
 }
 
 /* inner glow ring */
@@ -374,7 +377,16 @@ body::after{
 }
 
 .card-icon img{
+  display: block;
   width: 76%;
+  height: auto;
+
+  /* ✅ iOS Safari: 初回描画の合成バグ対策（タップで直る現象の予防） */
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+
   filter:
     drop-shadow(0 0 10px rgba(34,230,255,0.95))
     drop-shadow(0 0 22px rgba(255,79,216,0.75));

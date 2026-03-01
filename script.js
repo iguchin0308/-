@@ -56,7 +56,7 @@ const CARDS = [
 ];
 
 // -------------------- Category Icons --------------------
-const CATEGORY_ICONS = {
+const ICONS = {
   "瞬発力": "./icons/category_speed.png",
   "アイデア": "./icons/category_idea.png",
   "投票": "./icons/category_vote.png",
@@ -65,7 +65,6 @@ const CATEGORY_ICONS = {
   "縛り": "./icons/category_restrict.png",
   "休憩": "./icons/category_break.png",
   "その他": "./icons/category_other.png",
-
   default: "./icons/category_other.png"
 };
 
@@ -137,7 +136,7 @@ function renderIconForCard(card) {
   const box = el("card-icon");
   if (!box) return;
 
-  const src = ICONS[card.title] || ICONS.default || "";
+　const src = ICONS[card.category] || ICONS.default || "";
   box.innerHTML = "";
   if (!src) return;
 

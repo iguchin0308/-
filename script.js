@@ -136,7 +136,7 @@ function renderIconForCard(card) {
   const box = el("card-icon");
   if (!box) return;
 
-　const src = ICONS[card.category] || ICONS.default || "";
+const src = ICONS[card.category] || ICONS.default || "";
   box.innerHTML = "";
   if (!src) return;
 

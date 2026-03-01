@@ -65,6 +65,7 @@ const ICONS = {
   "縛り": "./icons/category_restrict.png",
   "休憩": "./icons/category_break.png",
   "その他": "./icons/category_other.png",
+  "席順": "./icons/category_seat.png",
   default: "./icons/category_other.png"
 };
 

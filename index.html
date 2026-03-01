@@ -11,7 +11,7 @@
   <!-- ✅ CSS（キャッシュ破り） -->
   <link rel="stylesheet" href="./style.css?v=102" />
 </head>
-<script src="./script.js?v=102" defer></script>
+
 <body>
   <div class="app">
     <header class="topbar" role="banner">
@@ -102,7 +102,7 @@
     </footer>
   </div>
 
-  <!-- ✅ JS（deferでDOM準備後に確実に動かす + キャッシュ破り） -->
+  <!-- ✅ JS：1回だけ読み込む（deferでDOM準備後に実行 + キャッシュ破り） -->
   <script src="./script.js?v=102" defer></script>
 </body>
 </html>
